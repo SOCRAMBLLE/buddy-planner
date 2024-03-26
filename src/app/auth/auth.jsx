@@ -29,10 +29,10 @@ export function UseAuth() {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
 
-  const signin = (user, cb) => {
+  const signin = (cb) => {
     return fakeAuth.signin(() => {
-      setCurrentUser(user);
-      setUser(user);
+      setCurrentUser(true);
+      setUser(true);
       if (cb) cb();
     });
   };

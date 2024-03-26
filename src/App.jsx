@@ -8,7 +8,10 @@ import HomePage from "./pages/HomePage";
 import Layout from "./pages/Layout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/app/Dashboard";
+import LoginPage from "./pages/login";
+import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
+import AppLayout from "./pages/app/AppLayout";
 
 function App() {
   const router = createBrowserRouter(
@@ -17,9 +20,16 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
-        <Route path="app">
+        <Route path="login" element={<LoginPage />} />
+        <Route
+          path="app"
+          element={
+            <PrivateRoute>
+              <AppLayout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
-          <Route path="login" />
           <Route path="signin" />
           <Route path="agenda" />
           <Route path="tasks" />
@@ -31,7 +41,11 @@ function App() {
     )
   );
 
-  return <RouterProvider router={router} />;
+  return (
+    <ProvideAuth>
+      <RouterProvider router={router} />
+    </ProvideAuth>
+  );
 }
 
 export default App;
