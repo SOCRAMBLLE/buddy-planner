@@ -1,0 +1,37 @@
+.navbar--container {
+  width: 100%;
+  height: 100px;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar--brand a {
+  display: none;
+}
+.navbar--brand.visible a {
+  display: block;
+}
+.navbar--brand img {
+  max-height: 90px;
+}
+
+.navbar--navlinks {
+  margin: auto 1.5rem auto auto;
+  display: flex;
+  gap: 0.8rem;
+}
+.navbar--navlinks a {
+  color: var(--main-txt-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+.navbar--navlinks a:hover {
+  text-decoration: underline;
+  color: var(--light-color);
+}
+
+.navbar--navlinks a.active {
+  text-decoration: underline;
+  font-weight: 600;
+}
