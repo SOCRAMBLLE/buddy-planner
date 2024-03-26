@@ -52,16 +52,14 @@ function useProvideAuth() {
   };
 }
 
-ProvideAuth.propTypes = {
-  children: PropTypes.node,
-};
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
-PrivateRoute.propTypes = {
+ProvideAuth.propTypes = {
   children: PropTypes.node,
 };
+
 export function PrivateRoute({ children }) {
   let { user } = UseAuth();
   const location = useLocation();
@@ -75,6 +73,9 @@ export function PrivateRoute({ children }) {
     />
   );
 }
+PrivateRoute.propTypes = {
+  children: PropTypes.node,
+};
 
 let currentUser = null;
 
