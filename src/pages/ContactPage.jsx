@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import "./ContactPage.css";
+import PageMotion from "../components/PageMotion";
 
 const ContactPage = () => {
   return (
-    <>
+    <PageMotion>
       <h1 className="page--title">Contact Us</h1>
       <section className="contact-page--container">
         <p>
@@ -42,7 +43,7 @@ const ContactPage = () => {
           your pet care journey easier.
         </p>
       </section>
-    </>
+    </PageMotion>
   );
 };
 

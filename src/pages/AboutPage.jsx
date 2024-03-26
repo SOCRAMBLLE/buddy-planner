@@ -1,8 +1,9 @@
+import PageMotion from "../components/PageMotion";
 import "./AboutPage.css";
 
 const AboutPage = () => {
   return (
-    <>
+    <PageMotion>
       <h1 className="page--title">About Paw Planner</h1>
       <section className="about-page--container">
         <h3>Our Mission</h3>
@@ -72,7 +73,7 @@ const AboutPage = () => {
           Together, let&apos;s make every day better for our pets.
         </p>
       </section>
-    </>
+    </PageMotion>
   );
 };
 
