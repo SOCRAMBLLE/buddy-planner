@@ -1,0 +1,19 @@
+.about-page--title {
+  margin: 0;
+}
+
+.about-page--container {
+  margin-bottom: 2rem;
+}
+.about-page--container p {
+  font-size: 0.9rem;
+}
+
+.about-page--container h3 {
+  margin-top: 2rem;
+}
+
+.about-page--container ul {
+  list-style-type: circle;
+  font-size: 0.9rem;
+}

@@ -1,21 +1,19 @@
 .homepage--container {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .homepage--brand-container {
-  margin: 0 auto 1rem;
-  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   text-align: center;
 }
 
 .homepage--brand-container img {
-  width: 100%;
+  max-width: 300px;
 }
 .homepage--brand-container h1 {
   margin: 0;
