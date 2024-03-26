@@ -1,1 +1,15 @@
+.contact-page--container {
+  margin-bottom: 2rem;
+}
 
+.contact-page--container h3 {
+  margin-top: 2rem;
+}
+.contact-page--container p {
+  font-size: 0.9rem;
+}
+
+.github--link {
+  text-decoration: none;
+  color: var(--light-color);
+}

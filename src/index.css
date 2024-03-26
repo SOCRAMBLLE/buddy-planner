@@ -26,3 +26,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.page--title {
+  margin: 0;
+}
