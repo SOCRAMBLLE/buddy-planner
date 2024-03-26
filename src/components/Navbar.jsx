@@ -12,19 +12,19 @@ const NavBar = () => {
       </div>
       <div className="navbar--navlinks">
         <NavLink
-          to="/about"
+          to="about"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           About
         </NavLink>
         <NavLink
-          to="/contact"
+          to="contact"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           Contact
         </NavLink>
         <NavLink
-          to="/app"
+          to="app"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           App

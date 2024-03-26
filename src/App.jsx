@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import Layout from "./pages/Layout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const router = createBrowserRouter(
@@ -17,10 +18,9 @@ function App() {
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="app">
-          <Route index />
+          <Route index element={<Dashboard />} />
           <Route path="login" />
           <Route path="signin" />
-          <Route path="dashboard" />
           <Route path="agenda" />
           <Route path="tasks" />
           <Route path="food" />
