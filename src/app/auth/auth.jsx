@@ -1,6 +1,13 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { firebaseApp } from "../api/firebase";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
 export const AuthContext = createContext();
 
 const fakeAuth = {
@@ -73,3 +80,45 @@ const setCurrentUser = (user) => {
 export const GetCurrentUser = () => {
   return currentUser;
 };
+
+export async function LoginUser(email, password) {
+  const auth = getAuth(firebaseApp);
+  try {
+    const data = await signInWithEmailAndPassword(auth, email, password);
+    const user = data.user;
+    const userJson = {
+      id: user.uid,
+      email: user.email,
+      token: user.accessToken,
+    };
+    return userJson;
+  } catch (err) {
+    const errorCode = err.code;
+    const errorMessage = err.message;
+    throw {
+      message: errorMessage,
+      status: errorCode,
+    };
+  }
+}
+
+export async function CreateUser(email, password) {
+  const auth = getAuth(firebaseApp);
+  try {
+    const data = await createUserWithEmailAndPassword(auth, email, password);
+    const user = data.user;
+    const userJson = {
+      id: user.uid,
+      email: user.email,
+      token: user.accessToken,
+    };
+    return userJson;
+  } catch (err) {
+    const errorCode = err.code;
+    const errorMessage = err.message;
+    throw {
+      message: errorMessage,
+      status: errorCode,
+    };
+  }
+}
