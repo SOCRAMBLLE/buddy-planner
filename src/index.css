@@ -19,3 +19,9 @@ body {
   font-family: "Poppins", sans-serif;
   color: var(--main-txt-color);
 }
+
+.layout--body {
+  width: 100%;
+  height: auto;
+  margin: 1rem 1.2rem 75px;
+}
