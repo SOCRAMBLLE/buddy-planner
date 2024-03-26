@@ -1,4 +1,9 @@
 import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+
+PageMotion.propTypes = {
+  children: PropTypes.node,
+};
 
 const PageMotion = ({ children }) => {
   return (

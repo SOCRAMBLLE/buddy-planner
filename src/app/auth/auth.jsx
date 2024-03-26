@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { firebaseApp } from "../api/firebase";
@@ -7,6 +6,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
 
@@ -52,11 +52,16 @@ function useProvideAuth() {
   };
 }
 
+ProvideAuth.propTypes = {
+  children: PropTypes.node,
+};
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
-
+PrivateRoute.propTypes = {
+  children: PropTypes.node,
+};
 export function PrivateRoute({ children }) {
   let { user } = UseAuth();
   const location = useLocation();
