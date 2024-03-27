@@ -13,6 +13,7 @@ import LoginPage from "./pages/LoginPage";
 import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
 import AppLayout from "./pages/app/AppLayout";
 import AuthPage, { Action as FormAction } from "./pages/AuthPage";
+import ProfilePage from "./pages/app/ProfilePage";
 
 function App() {
   const router = createBrowserRouter(
@@ -25,7 +26,14 @@ function App() {
           <Route index action={FormAction} element={<AuthPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
-        <Route path="profile" element={<h1>profile page</h1>} />
+        <Route
+          path="profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="app"
           element={

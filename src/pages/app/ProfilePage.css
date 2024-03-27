@@ -1,0 +1,31 @@
+.profile-page--container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-page--container h1 {
+  margin: 0 0 1rem;
+}
+
+.profile-page--container img {
+  border-radius: 3rem;
+  width: 100px;
+}
+
+.profile-page-logout-btn {
+  margin: 2rem auto;
+  width: 300px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background-color: var(--secondary-color);
+  color: var(--main-bg-color);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: inset 0px 0px 10px -1px rgba(0, 0, 0, 0.5);
+}
+.profile-page-logout-btn:active {
+  background-color: var(--main-txt-color);
+}

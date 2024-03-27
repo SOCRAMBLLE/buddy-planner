@@ -10,7 +10,7 @@
 body {
   position: relative;
   margin: auto;
-  width: 100%;
+  width: 100svh;
   max-width: 500px;
   min-height: 100svh;
   background-color: var(--main-bg-color);

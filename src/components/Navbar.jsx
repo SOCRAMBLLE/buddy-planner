@@ -32,17 +32,16 @@ const NavBar = () => {
         >
           App
         </NavLink>
-        <NavLink
-          to="/profile"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          <button
-            // onClick={}
-            className="navbar--paw-user"
+        {user && (
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <PawIcon />
-          </button>
-        </NavLink>
+            <button className="navbar--paw-user">
+              <PawIcon />
+            </button>
+          </NavLink>
+        )}
       </div>
     </nav>
   );
