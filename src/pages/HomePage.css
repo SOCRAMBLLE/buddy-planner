@@ -7,6 +7,7 @@
 
 .homepage--brand-container {
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -14,6 +15,7 @@
 }
 
 .homepage--brand-container img {
+  width: auto;
   max-width: 300px;
 }
 .homepage--brand-container h1 {
