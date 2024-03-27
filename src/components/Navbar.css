@@ -21,7 +21,8 @@
   display: flex;
   gap: 0.8rem;
 }
-.navbar--navlinks a {
+.navbar--navlinks a,
+.navbar--paw-user {
   color: var(--main-txt-color);
   text-decoration: none;
   font-weight: 500;
@@ -34,4 +35,22 @@
 .navbar--navlinks a.active {
   text-decoration: underline;
   font-weight: 600;
+}
+
+.navbar--paw-user {
+  border-radius: 2rem;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.navbar--paw-user:hover {
+  color: var(--light-color);
+  -webkit-box-shadow: 0px 0px 2px 2px var(--light-color);
+  box-shadow: 0px 0px 2px 2px var(--light-color);
+}
+.navbar--navlinks a.active .navbar--paw-user {
+  -webkit-box-shadow: 0px 0px 2px 2px var(---main-txt-color);
+  box-shadow: 0px 0px 2px 2px var(--main-txt-color);
 }

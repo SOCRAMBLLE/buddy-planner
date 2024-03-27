@@ -1,8 +1,11 @@
 import { NavLink } from "react-router-dom";
 import Logo from "../assets/brand/logo.png";
 import "./Navbar.css";
+import { UseAuth } from "../app/auth/auth";
+import { PawIcon } from "./ui/Icons";
 
 const NavBar = () => {
+  const { user } = UseAuth();
   return (
     <nav className="navbar--container">
       <div className="navbar--brand visible">
@@ -28,6 +31,17 @@ const NavBar = () => {
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           App
+        </NavLink>
+        <NavLink
+          to="/profile"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          <button
+            // onClick={}
+            className="navbar--paw-user"
+          >
+            <PawIcon />
+          </button>
         </NavLink>
       </div>
     </nav>

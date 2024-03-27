@@ -1,11 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { firebaseApp } from "../api/firebase";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, sendSignInLinkToEmail, signInWithPopup } from "firebase/auth";
 import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
@@ -27,12 +23,14 @@ export function UseAuth() {
 }
 
 function useProvideAuth() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null
+  );
 
-  const signin = (cb) => {
+  const signin = (user, cb) => {
     return fakeAuth.signin(() => {
-      setCurrentUser(true);
-      setUser(true);
+      setCurrentUser(user);
+      setUser(user);
       if (cb) cb();
     });
   };
@@ -63,6 +61,7 @@ ProvideAuth.propTypes = {
 export function PrivateRoute({ children }) {
   let { user } = UseAuth();
   const location = useLocation();
+
   return user ? (
     children
   ) : (
@@ -87,16 +86,22 @@ export const GetCurrentUser = () => {
   return currentUser;
 };
 
-export async function LoginUser(email, password) {
+export async function LoginUser(provider) {
   const auth = getAuth(firebaseApp);
+
   try {
-    const data = await signInWithEmailAndPassword(auth, email, password);
-    const user = data.user;
+    const result = await signInWithPopup(auth, provider);
+    // The signed-in user info.
+    const user = result.user;
     const userJson = {
-      id: user.uid,
       email: user.email,
-      token: user.accessToken,
+      id: user.uid,
+      accessToken: user.accessToken,
+      name: user.displayName,
+      photoUrl: user.photoURL,
     };
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
     return userJson;
   } catch (err) {
     const errorCode = err.code;
@@ -108,18 +113,21 @@ export async function LoginUser(email, password) {
   }
 }
 
-export async function CreateUser(email, password) {
+export async function CreateUser(email) {
   const auth = getAuth(firebaseApp);
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: "http://localhost:5173/auth/login",
+    // This must be true.
+    handleCodeInApp: true,
+  };
   try {
-    const data = await createUserWithEmailAndPassword(auth, email, password);
-    const user = data.user;
-    const userJson = {
-      id: user.uid,
-      email: user.email,
-      token: user.accessToken,
-    };
-    return userJson;
+    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    localStorage.setItem("emailForSignIn", email);
+    return { success: true };
   } catch (err) {
+    console.log(err);
     const errorCode = err.code;
     const errorMessage = err.message;
     throw {

@@ -12,7 +12,7 @@ import Dashboard from "./pages/app/Dashboard";
 import LoginPage from "./pages/LoginPage";
 import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
 import AppLayout from "./pages/app/AppLayout";
-import AuthPage from "./pages/AuthPage";
+import AuthPage, { Action as FormAction } from "./pages/AuthPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -22,9 +22,10 @@ function App() {
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="auth">
-          <Route index element={<AuthPage />} />
+          <Route index action={FormAction} element={<AuthPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
+        <Route path="profile" element={<h1>profile page</h1>} />
         <Route
           path="app"
           element={
@@ -34,7 +35,6 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="signin" />
           <Route path="agenda" />
           <Route path="tasks" />
           <Route path="food" />
