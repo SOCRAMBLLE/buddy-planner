@@ -9,7 +9,11 @@ const NavBar = () => {
   return (
     <nav className="navbar--container">
       <div className="navbar--brand visible">
-        <NavLink>
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) => (isActive ? "logoHidden" : "")}
+        >
           <img src={Logo} />
         </NavLink>
       </div>

@@ -14,6 +14,8 @@
 }
 .navbar--brand img {
   max-height: 90px;
+  transform: translateY(0);
+  transition: all ease-in 0.2s;
 }
 
 .navbar--navlinks {
@@ -34,6 +36,11 @@
 .navbar--navlinks a.active {
   text-decoration: underline;
   font-weight: 600;
+}
+.logoHidden img {
+  opacity: 0;
+  cursor: default;
+  transform: translateY(1rem);
 }
 
 .navbar--paw-user {
