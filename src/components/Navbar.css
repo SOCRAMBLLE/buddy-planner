@@ -3,6 +3,7 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .navbar--brand a {
@@ -16,7 +17,6 @@
 }
 
 .navbar--navlinks {
-  margin: auto 1.5rem auto auto;
   display: flex;
   gap: 0.8rem;
 }

@@ -10,7 +10,7 @@
 body {
   position: relative;
   margin: auto;
-  width: 100svh;
+  width: 100%;
   max-width: 500px;
   min-height: 100svh;
   background-color: var(--main-bg-color);
@@ -22,6 +22,7 @@ body {
 
 .layout--body {
   height: auto;
+
   padding: 1rem 1.2rem 75px;
   display: flex;
   flex-direction: column;
