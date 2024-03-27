@@ -7,11 +7,15 @@
   height: 75px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   font-size: 0.75rem;
 }
 
 .footer span {
   font-size: 1rem;
   margin-right: 3px;
+}
+
+.footer img {
+  width: 100px;
 }

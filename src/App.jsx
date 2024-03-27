@@ -9,9 +9,10 @@ import Layout from "./pages/Layout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import Dashboard from "./pages/app/Dashboard";
-import LoginPage from "./pages/login";
+import LoginPage from "./pages/LoginPage";
 import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
 import AppLayout from "./pages/app/AppLayout";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -20,7 +21,10 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route path="auth">
+          <Route index element={<AuthPage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Route>
         <Route
           path="app"
           element={

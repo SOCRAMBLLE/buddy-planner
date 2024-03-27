@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
@@ -5,8 +6,13 @@ const Footer = () => {
   const year = date.getFullYear();
   return (
     <footer className="footer">
-      <span>Ⓒ</span>
-      {year} Buddy Planner
+      <div>
+        <span>Ⓒ</span>
+        {year} Buddy Planner
+      </div>
+      <Link to="https://marcosfraga.ch" target="_blank">
+        <img src="https://www.marcosfraga.ch/static/media/MARCOS%20W.e116c7943d9b526d93e5.png" />
+      </Link>
     </footer>
   );
 };
