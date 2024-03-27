@@ -8,7 +8,10 @@ const HomePage = () => {
       <main className="homepage--container">
         <div className="homepage--brand-container">
           <img src={Logo} />
-          <h1>Organize Their Joy, Simplify Your Life.</h1>
+          <h1>
+            Organize Their Joy,
+            <br /> Simplify Your Life.
+          </h1>
         </div>
       </main>
     </PageMotion>
