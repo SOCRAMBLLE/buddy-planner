@@ -15,7 +15,7 @@
 .navbar--brand img {
   max-height: 90px;
   transform: translateY(0);
-  transition: all ease-in 0.2s;
+  transition: all ease 0.1s;
 }
 
 .navbar--navlinks {
