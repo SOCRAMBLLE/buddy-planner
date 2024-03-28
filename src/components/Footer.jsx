@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="footer">
       <div>
         <span>Ⓒ</span>
-        {year} Buddy Planner
+        {year} Paw Planner
       </div>
       <Link to="https://marcosfraga.ch" target="_blank">
         <img src="https://www.marcosfraga.ch/static/media/MARCOS%20W.e116c7943d9b526d93e5.png" />
