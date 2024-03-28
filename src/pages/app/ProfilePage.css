@@ -14,9 +14,9 @@
 }
 
 .profile-page-logout-btn {
-  margin: 2rem auto;
-  width: 300px;
-  height: 40px;
+  margin: 0 0 2rem auto;
+  width: 100px;
+  height: 35px;
   border: 0;
   border-radius: 10px;
   background-color: var(--secondary-color);
@@ -25,7 +25,21 @@
   font-size: 0.9rem;
   font-weight: 500;
   box-shadow: inset 0px 0px 10px -1px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 .profile-page-logout-btn:active {
   background-color: var(--main-txt-color);
+}
+
+.profile-page--pets-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.profile-page--pets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
 }

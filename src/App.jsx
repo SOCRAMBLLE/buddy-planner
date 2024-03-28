@@ -13,7 +13,8 @@ import LoginPage from "./pages/LoginPage";
 import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
 import AppLayout from "./pages/app/AppLayout";
 import AuthPage, { Action as FormAction } from "./pages/AuthPage";
-import ProfilePage from "./pages/app/ProfilePage";
+import ProfilePage, { Loader as PetLoader } from "./pages/app/ProfilePage";
+import BuddyRegPage from "./pages/app/BuddyRegister";
 
 function App() {
   const router = createBrowserRouter(
@@ -26,14 +27,18 @@ function App() {
           <Route index action={FormAction} element={<AuthPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
-        <Route
-          path="profile"
-          element={
-            <PrivateRoute>
-              <ProfilePage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="profile">
+          <Route
+            index
+            loader={PetLoader}
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="register-pet" element={<BuddyRegPage />} />
+        </Route>
         <Route
           path="app"
           element={
