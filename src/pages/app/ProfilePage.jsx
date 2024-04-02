@@ -49,17 +49,13 @@ const ProfilePage = () => {
                   <PetCard key={index} pet={pet} />
                 ))}
               </div>
-              <Link to="register-pet">
-                <button className="profile-page--addpet-btn">
-                  Add one more buddy
-                </button>
+              <Link to="register-pet" className="profile-page--addpet-btn">
+                <button>Add one more buddy</button>
               </Link>
             </>
           ) : (
-            <Link to="register-pet">
-              <button className="profile-page--addpet-btn">
-                Add your first buddy
-              </button>
+            <Link to="register-pet" className="profile-page--addpet-btn">
+              <button>Add your first buddy</button>
             </Link>
           )}
         </section>
