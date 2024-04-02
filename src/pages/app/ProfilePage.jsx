@@ -50,12 +50,16 @@ const ProfilePage = () => {
                 ))}
               </div>
               <Link to="register-pet">
-                <button>Add one more buddy</button>
+                <button className="profile-page--addpet-btn">
+                  Add one more buddy
+                </button>
               </Link>
             </>
           ) : (
             <Link to="register-pet">
-              <button>Add your first buddy</button>
+              <button className="profile-page--addpet-btn">
+                Add your first buddy
+              </button>
             </Link>
           )}
         </section>
