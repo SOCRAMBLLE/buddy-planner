@@ -15,7 +15,6 @@ export async function fetchBreeds(pet) {
         }
       });
       breedsArray.unshift("crossbreed");
-      console.log(breedsArray);
       return breedsArray;
     } catch (err) {
       throw new Error(err);
@@ -29,7 +28,6 @@ export async function fetchBreeds(pet) {
         throw new Error("Breeds list is undefined or null");
       }
       const breedsArray = breedsList.map((cat) => cat.breed);
-      console.log(breedsArray);
       return breedsArray;
     } catch (err) {
       throw new Error(err);
@@ -56,7 +54,6 @@ export async function fetchBreeds(pet) {
         "Satin",
         "Silver Fox",
       ];
-      console.log(rabbitBreeds);
       return rabbitBreeds;
     } catch (err) {
       throw new Error(err);

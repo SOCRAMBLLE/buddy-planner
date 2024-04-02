@@ -1,0 +1,21 @@
+.photo-upload--container {
+  display: flex;
+  align-items: center;
+}
+
+.photo-upload--container .upload {
+  border: 0;
+}
+
+.photo-upload--container .photo-upload--img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.photo-upload--container .photo-upload--img img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}

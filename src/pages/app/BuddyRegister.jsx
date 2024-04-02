@@ -1,4 +1,4 @@
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import PageMotion from "../../components/PageMotion";
 import PhotoUploader from "../../components/PhotoUploader";
 import "./BuddyRegister.css";
@@ -8,8 +8,12 @@ import { IoChevronBack } from "react-icons/io5";
 import ToggleButton from "../../components/ui/toggle-button";
 import { useState } from "react";
 import { fetchBreeds } from "../../app/api/breedData";
+import { addPet } from "../../app/api/firebase";
+import { UseAuth } from "../../app/auth/auth";
 
 const BuddyRegPage = () => {
+  const { user } = UseAuth();
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState({
     cat: false,
     dog: false,
@@ -17,17 +21,23 @@ const BuddyRegPage = () => {
   });
   const [breedData, setBreedData] = useState([]);
   const [formData, setFormData] = useState({
+    type: "",
     name: "",
-    breed: "",
+    breed: "i don't know",
     birthday: "",
+    imageURL: "",
+    userID: user.id,
   });
-  console.log(formData);
   const handleTypeSelect = async (pet) => {
     setSelectedType((prev) => ({
       cat: false,
       dog: false,
       rabbit: false,
       [pet]: !prev[pet],
+    }));
+    setFormData((prev) => ({
+      ...prev,
+      type: pet,
     }));
     const data = await fetchBreeds(pet);
     setBreedData(data);
@@ -41,13 +51,30 @@ const BuddyRegPage = () => {
     }));
   };
 
+  const handlePhotoUpload = (photoUrl) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageURL: photoUrl,
+    }));
+  };
+
+  async function SubmitForm(event) {
+    event.preventDefault();
+    try {
+      await addPet(formData);
+      return navigate("/profile");
+    } catch (err) {
+      return { error: err.message || "Unknown error when trying to login" };
+    }
+  }
+
   return (
     <PageMotion>
       <main className="petreg-page--container">
         <Link className="petreg-page--back-btn" to="/profile">
           <IoChevronBack /> Go back
         </Link>
-        <Form className="petreg-page--form">
+        <Form onSubmit={SubmitForm} className="petreg-page--form">
           <div className="pet-type--container">
             <div className="pet-type--button">
               <ToggleButton
@@ -111,7 +138,9 @@ const BuddyRegPage = () => {
                   onChange={handleChange}
                   name="breed"
                 >
-                  <option defaultValue>I don&apos;t know</option>
+                  <option defaultValue value="i don't know">
+                    I don&apos;t know
+                  </option>
                   {breedData.map((breed, index) => (
                     <option key={index} value={breed}>
                       {breed}
@@ -131,7 +160,7 @@ const BuddyRegPage = () => {
               </label>
               <label>
                 Photo <br />
-                <PhotoUploader />
+                <PhotoUploader onUpload={handlePhotoUpload} />
               </label>
               <button className="petreg-page--add-btn">
                 Add {formData.name}

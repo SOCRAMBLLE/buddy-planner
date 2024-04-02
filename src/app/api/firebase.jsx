@@ -8,7 +8,7 @@ import {
   query,
   addDoc,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -53,7 +53,7 @@ export const addPet = async (pet) => {
 export const uploadPhoto = async (file) => {
   const storage = getStorage(firebaseApp);
   const storageRef = ref(storage, "pets/" + file.name);
-  const snapshot = await uploadBytes(storageRef, file);
-  console.log("Uploaded a blob or file!", snapshot);
-  return snapshot;
+  await uploadBytes(storageRef, file);
+  const photoURL = await getDownloadURL(storageRef);
+  return photoURL;
 };

@@ -13,11 +13,12 @@ const PetCard = ({ pet }) => {
   } else if (pet.type === "rabbit") {
     petImage = rabbitIcon;
   }
+  console.log("petCard", pet);
 
   return (
     <div className="pet-card--container">
       <h2>{pet.name}</h2>
-      <img src={pet.image ? pet.image : petImage} alt={pet.name} />
+      <img src={pet.imageURL ? pet.imageURL : petImage} alt={pet.name} />
       <p>{pet.breed}</p>
     </div>
   );
