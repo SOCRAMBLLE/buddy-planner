@@ -55,7 +55,7 @@ const ProfilePage = () => {
         <button className="profile-page-logout-btn" onClick={handleLogout}>
           Logout
         </button>
-        <h1>Hello {user.name}!</h1>
+        <h1>{user.name}</h1>
         <img
           // onClick={triggerFileInput}
           src={user.photoUrl ? user.photoUrl : userIcon}

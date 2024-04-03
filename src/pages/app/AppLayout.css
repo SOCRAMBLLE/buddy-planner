@@ -1,0 +1,23 @@
+.app--navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.app--navigation a {
+  width: 60px;
+  height: 40px;
+  background-color: var(--main-txt-color);
+  color: var(--main-bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: all ease-in-out 0.1s;
+}
+
+.app--navigation a.active {
+  background-color: var(--light-color);
+}

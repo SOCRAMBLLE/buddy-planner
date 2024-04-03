@@ -16,15 +16,9 @@
   cursor: pointer;
 }
 
-.pet-card--container img {
+.pet-card--container .pet-card--petPhoto {
   object-fit: cover;
   width: 130px;
   height: 130px;
   border-radius: 10px;
-}
-
-.pet-card--container p {
-  font-weight: 500;
-  font-size: 0.8rem;
-  text-transform: capitalize;
 }

@@ -66,10 +66,10 @@ export const addPet = async (pet, id) => {
 };
 
 const resizeConfig = {
-  quality: 0.7, // Define a qualidade da imagem (0 a 1)
-  maxWidth: 800, // Largura máxima em pixels
-  maxHeight: 800, // Altura máxima em pixels
-  autoRotate: true, // Corrige a orientação da imagem baseada em EXIF
+  quality: 0.9,
+  maxWidth: 800,
+  maxHeight: 800,
+  autoRotate: true,
 };
 export const uploadUserPhoto = async (file) => {
   try {

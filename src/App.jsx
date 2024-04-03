@@ -8,7 +8,7 @@ import HomePage from "./pages/HomePage";
 import Layout from "./pages/Layout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
-import Dashboard from "./pages/app/Dashboard";
+import Dashboard, { Loader as DashLoader } from "./pages/app/Dashboard";
 import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
 import AppLayout from "./pages/app/AppLayout";
 import AuthPage, { Action as FormAction } from "./pages/AuthPage";
@@ -47,7 +47,7 @@ function App() {
             </PrivateRoute>
           }
         >
-          <Route index element={<Dashboard />} />
+          <Route index element={<Dashboard />} loader={DashLoader} />
           <Route path="agenda" />
           <Route path="tasks" />
           <Route path="food" />

@@ -1,4 +1,9 @@
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import PageMotion from "../../components/PageMotion";
 import "./EditPet.css";
 import {
@@ -22,6 +27,8 @@ export async function Loader({ request }) {
 }
 
 const EditPet = () => {
+  const [searchParams] = useSearchParams();
+  const backPath = searchParams.get("back");
   const data = useLoaderData();
   const navigate = useNavigate();
   const [currentPet, setCurrentPet] = useState(data);
@@ -194,7 +201,7 @@ const EditPet = () => {
             )}
           </label>
           <div className="editpet--buttons-container">
-            <Link className="editpet--back-btn" to="/profile">
+            <Link className="editpet--back-btn" to={backPath}>
               <IoChevronBack />
               Back
             </Link>

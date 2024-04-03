@@ -3,9 +3,11 @@ import "./petCard.css";
 import dogIcon from "../assets/profile/dog.png";
 import catIcon from "../assets/profile/cat.png";
 import rabbitIcon from "../assets/profile/rabbit.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const PetCard = ({ pet, id }) => {
+  const { pathname } = useLocation();
+
   let petImage;
   if (pet.type === "dog") {
     petImage = dogIcon;
@@ -16,10 +18,17 @@ const PetCard = ({ pet, id }) => {
   }
 
   return (
-    <Link className="pet-card--link" to={`pet?id=${id}`}>
+    <Link
+      className="pet-card--link"
+      to={`/profile/pet?id=${id}&back=${pathname}`}
+    >
       <div className="pet-card--container">
         <h2>{pet.name}</h2>
-        <img src={pet.imageURL ? pet.imageURL : petImage} alt={pet.name} />
+        <img
+          className="pet-card--petPhoto"
+          src={pet.imageURL ? pet.imageURL : petImage}
+          alt={pet.name}
+        />
       </div>
     </Link>
   );
