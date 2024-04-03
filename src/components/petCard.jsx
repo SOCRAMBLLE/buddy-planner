@@ -21,7 +21,6 @@ const PetCard = ({ pet, id }) => {
       <div className="pet-card--container">
         <h2>{pet.name}</h2>
         <img src={pet.imageURL ? pet.imageURL : petImage} alt={pet.name} />
-        <p>{pet.breed}</p>
       </div>
     </Link>
   );

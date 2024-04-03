@@ -1,7 +1,12 @@
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import PageMotion from "../../components/PageMotion";
 import "./EditPet.css";
-import { deletePet, editPet, getPet } from "../../app/api/firebase";
+import {
+  deletePet,
+  editPet,
+  getPet,
+  uploadPhoto,
+} from "../../app/api/firebase";
 import dogImg from "../../assets/profile/dog.png";
 import catImg from "../../assets/profile/cat.png";
 import rabbitImg from "../../assets/profile/rabbit.png";
@@ -71,6 +76,24 @@ const EditPet = () => {
     navigate("/profile");
   };
 
+  const triggerFileInput = () => {
+    document.getElementById("fileInput").click();
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const photoURL = await uploadPhoto(file);
+      await editPet(currentPet.id, { imageURL: photoURL });
+
+      setFormData((prev) => ({ ...prev, imageURL: photoURL }));
+    } catch (error) {
+      console.error("Erro ao fazer upload da imagem:", error);
+    }
+  };
+
   const defaultPetImg = () => {
     if (currentPet.data.type === "dog") {
       return dogImg;
@@ -85,7 +108,16 @@ const EditPet = () => {
     <PageMotion>
       <main className="editpet-page--container">
         <div className="editpet-page--img-container">
-          <img src={formData.imageURL ? formData.imageURL : defaultPetImg()} />
+          <img
+            onClick={triggerFileInput}
+            src={formData.imageURL ? formData.imageURL : defaultPetImg()}
+          />
+          <input
+            id="fileInput"
+            type="file"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
         </div>
         <section className="editpet-page--details">
           <label>
