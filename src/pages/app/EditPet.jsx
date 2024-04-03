@@ -5,7 +5,7 @@ import {
   deletePet,
   editPet,
   getPet,
-  uploadPhoto,
+  uploadPetPhoto,
 } from "../../app/api/firebase";
 import dogImg from "../../assets/profile/dog.png";
 import catImg from "../../assets/profile/cat.png";
@@ -85,7 +85,7 @@ const EditPet = () => {
     if (!file) return;
 
     try {
-      const photoURL = await uploadPhoto(file);
+      const photoURL = await uploadPetPhoto(file);
       await editPet(currentPet.id, { imageURL: photoURL });
 
       setFormData((prev) => ({ ...prev, imageURL: photoURL }));
@@ -199,7 +199,7 @@ const EditPet = () => {
               Back
             </Link>
             <div>
-              {editMode && (
+              {editMode ? (
                 <>
                   <button
                     className="editpet--cancel-btn"
@@ -211,13 +211,14 @@ const EditPet = () => {
                     Update Pet
                   </button>
                 </>
+              ) : (
+                <button
+                  className="editpet--delete-btn"
+                  onClick={() => setDeletePetAlert(true)}
+                >
+                  Delete Pet
+                </button>
               )}
-              <button
-                className="editpet--delete-btn"
-                onClick={() => setDeletePetAlert(true)}
-              >
-                Delete Pet
-              </button>
             </div>
           </div>
         </section>

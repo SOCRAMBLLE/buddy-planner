@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { uploadPhoto } from "../app/api/firebase";
+import { uploadPetPhoto } from "../app/api/firebase";
 import "./PhotoUploader.css";
 
 const PhotoUploader = ({ onUpload }) => {
@@ -16,7 +16,7 @@ const PhotoUploader = ({ onUpload }) => {
       return;
     }
     try {
-      const photoURL = await uploadPhoto(file);
+      const photoURL = await uploadPetPhoto(file);
       setImageUrl(photoURL);
       onUpload(photoURL);
     } catch (error) {

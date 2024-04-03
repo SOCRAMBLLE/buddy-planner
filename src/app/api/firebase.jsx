@@ -63,8 +63,19 @@ export const addPet = async (pet, id) => {
     throw new Error(error);
   }
 };
+export const uploadUserPhoto = async (file) => {
+  try {
+    const storage = getStorage(firebaseApp);
+    const storageRef = ref(storage, "users/" + file.name);
+    await uploadBytes(storageRef, file);
+    const photoURL = await getDownloadURL(storageRef);
+    return photoURL;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
 
-export const uploadPhoto = async (file) => {
+export const uploadPetPhoto = async (file) => {
   try {
     const storage = getStorage(firebaseApp);
     const storageRef = ref(storage, "pets/" + file.name);

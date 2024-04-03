@@ -14,7 +14,6 @@ const PetCard = ({ pet, id }) => {
   } else if (pet.type === "rabbit") {
     petImage = rabbitIcon;
   }
-  console.log("petCard", pet);
 
   return (
     <Link className="pet-card--link" to={`pet?id=${id}`}>

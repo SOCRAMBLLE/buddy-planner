@@ -3,7 +3,9 @@ import { UseAuth } from "../../app/auth/auth";
 import PageMotion from "../../components/PageMotion";
 import "./ProfilePage.css";
 import PetCard from "../../components/petCard";
-import { queryPets } from "../../app/api/firebase";
+import { queryPets, uploadUserPhoto } from "../../app/api/firebase";
+import userIcon from "../../assets/profile/user.png";
+// import { getAuth, updateProfile } from "firebase/auth";
 
 export const Loader = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -26,6 +28,27 @@ const ProfilePage = () => {
       navigate("/auth");
     });
   }
+
+  // const triggerFileInput = () => {
+  //   document.getElementById("fileInput").click();
+  // };
+
+  // const handleChangeProfilePhoto = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   try {
+  //     const authentication = getAuth();
+  //     const getuser = authentication.currentUser;
+  //     console.log(getuser);
+  //     const profilePhotoURL = await uploadUserPhoto(file);
+  //     await updateProfile(getuser, { photoURL: profilePhotoURL });
+  //     navigate("/profile");
+  //   } catch (error) {
+  //     console.error("Erro ao fazer upload da imagem:", error);
+  //   }
+  // };
+
   return (
     <PageMotion>
       <main className="profile-page--container">
@@ -33,7 +56,16 @@ const ProfilePage = () => {
           Logout
         </button>
         <h1>Hello {user.name}!</h1>
-        <img src={user.photoUrl} />
+        <img
+          // onClick={triggerFileInput}
+          src={user.photoUrl ? user.photoUrl : userIcon}
+        />
+        {/* <input
+          id="fileInput"
+          type="file"
+          onChange={handleChangeProfilePhoto}
+          style={{ display: "none" }}
+        /> */}
         <p>
           <strong>email:</strong> {user.email}
         </p>

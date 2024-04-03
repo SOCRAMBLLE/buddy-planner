@@ -9,7 +9,6 @@ import Layout from "./pages/Layout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import Dashboard from "./pages/app/Dashboard";
-import LoginPage from "./pages/LoginPage";
 import { PrivateRoute, ProvideAuth } from "./app/auth/auth";
 import AppLayout from "./pages/app/AppLayout";
 import AuthPage, { Action as FormAction } from "./pages/AuthPage";
@@ -26,7 +25,6 @@ function App() {
         <Route path="contact" element={<ContactPage />} />
         <Route path="auth">
           <Route index action={FormAction} element={<AuthPage />} />
-          <Route path="login" element={<LoginPage />} />
         </Route>
         <Route path="profile">
           <Route

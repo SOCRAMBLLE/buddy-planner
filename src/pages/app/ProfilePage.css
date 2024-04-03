@@ -11,6 +11,7 @@
 .profile-page--container img {
   border-radius: 3rem;
   width: 100px;
+  cursor: pointer;
 }
 
 .profile-page-logout-btn {
