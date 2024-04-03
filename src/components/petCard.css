@@ -17,8 +17,9 @@
 }
 
 .pet-card--container img {
-  width: 100px;
-  height: 100px;
+  object-fit: cover;
+  width: 130px;
+  height: 130px;
   border-radius: 10px;
 }
 

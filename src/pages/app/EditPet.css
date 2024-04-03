@@ -24,6 +24,7 @@
 }
 
 .editpet-page--img-container img {
+  object-fit: cover;
   padding: 0.3rem;
   width: 200px;
   height: 200px;

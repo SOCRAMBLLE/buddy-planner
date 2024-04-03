@@ -13,6 +13,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { readAndCompressImage } from "browser-image-resizer";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -63,11 +64,19 @@ export const addPet = async (pet, id) => {
     throw new Error(error);
   }
 };
+
+const resizeConfig = {
+  quality: 0.7, // Define a qualidade da imagem (0 a 1)
+  maxWidth: 800, // Largura máxima em pixels
+  maxHeight: 800, // Altura máxima em pixels
+  autoRotate: true, // Corrige a orientação da imagem baseada em EXIF
+};
 export const uploadUserPhoto = async (file) => {
   try {
     const storage = getStorage(firebaseApp);
+    const resizePhoto = await readAndCompressImage(file, resizeConfig);
     const storageRef = ref(storage, "users/" + file.name);
-    await uploadBytes(storageRef, file);
+    await uploadBytes(storageRef, resizePhoto);
     const photoURL = await getDownloadURL(storageRef);
     return photoURL;
   } catch (err) {
@@ -78,8 +87,9 @@ export const uploadUserPhoto = async (file) => {
 export const uploadPetPhoto = async (file) => {
   try {
     const storage = getStorage(firebaseApp);
+    const resizePhoto = await readAndCompressImage(file, resizeConfig);
     const storageRef = ref(storage, "pets/" + file.name);
-    await uploadBytes(storageRef, file);
+    await uploadBytes(storageRef, resizePhoto);
     const photoURL = await getDownloadURL(storageRef);
     return photoURL;
   } catch (err) {
