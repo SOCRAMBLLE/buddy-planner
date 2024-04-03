@@ -7,6 +7,10 @@ import {
   where,
   query,
   addDoc,
+  deleteDoc,
+  doc,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -38,12 +42,22 @@ export const queryPets = async (userID) => {
     where("userID", "==", userID)
   );
   const querySnapshot = await getDocs(snapshot);
-  return querySnapshot.docs.map((doc) => doc.data());
+  return querySnapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
 };
 
-export const addPet = async (pet) => {
+export const getPet = async (id) => {
+  const pet = doc(petsCollectionRef, id);
+  const snapshot = await getDoc(pet);
+  const data = {
+    id: snapshot.id,
+    data: snapshot.data(),
+  };
+  return data;
+};
+
+export const addPet = async (pet, id) => {
   try {
-    await addDoc(petsCollectionRef, pet);
+    await addDoc(petsCollectionRef, pet, id);
     return { success: true };
   } catch (error) {
     throw new Error(error);
@@ -51,9 +65,33 @@ export const addPet = async (pet) => {
 };
 
 export const uploadPhoto = async (file) => {
-  const storage = getStorage(firebaseApp);
-  const storageRef = ref(storage, "pets/" + file.name);
-  await uploadBytes(storageRef, file);
-  const photoURL = await getDownloadURL(storageRef);
-  return photoURL;
+  try {
+    const storage = getStorage(firebaseApp);
+    const storageRef = ref(storage, "pets/" + file.name);
+    await uploadBytes(storageRef, file);
+    const photoURL = await getDownloadURL(storageRef);
+    return photoURL;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const editPet = async (id, json) => {
+  try {
+    const pet = doc(petsCollectionRef, id);
+    await updateDoc(pet, json);
+
+    return { message: "File with the id" + id + " was modified successfully." };
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const deletePet = async (id) => {
+  try {
+    await deleteDoc(doc(petsCollectionRef, id));
+    return { message: "File with the id" + id + " was deleted successfully." };
+  } catch (err) {
+    throw new Error(err);
+  }
 };

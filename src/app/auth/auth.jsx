@@ -91,7 +91,6 @@ export async function LoginUser(provider) {
 
   try {
     const result = await signInWithPopup(auth, provider);
-    // The signed-in user info.
     const user = result.user;
     const userJson = {
       email: user.email,
@@ -100,8 +99,6 @@ export async function LoginUser(provider) {
       name: user.displayName,
       photoUrl: user.photoURL,
     };
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
     return userJson;
   } catch (err) {
     const errorCode = err.code;

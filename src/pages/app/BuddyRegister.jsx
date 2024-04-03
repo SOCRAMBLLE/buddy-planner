@@ -10,10 +10,12 @@ import { useState } from "react";
 import { fetchBreeds } from "../../app/api/breedData";
 import { addPet } from "../../app/api/firebase";
 import { UseAuth } from "../../app/auth/auth";
+import { nanoid } from "nanoid";
 
 const BuddyRegPage = () => {
   const { user } = UseAuth();
   const navigate = useNavigate();
+  const nanoId = nanoid();
   const [selectedType, setSelectedType] = useState({
     cat: false,
     dog: false,
@@ -61,7 +63,8 @@ const BuddyRegPage = () => {
   async function SubmitForm(event) {
     event.preventDefault();
     try {
-      await addPet(formData);
+      console.log(nanoId);
+      await addPet(formData, nanoId);
       return navigate("/profile");
     } catch (err) {
       return { error: err.message || "Unknown error when trying to login" };

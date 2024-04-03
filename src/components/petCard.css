@@ -1,4 +1,10 @@
+.pet-card--link {
+  text-decoration: none;
+}
+
 .pet-card--container {
+  background-color: var(--light-color);
+  color: var(--main-txt-color);
   width: 150px;
   height: auto;
   padding: 10px;
@@ -7,6 +13,7 @@
   flex-direction: column;
   align-items: center;
   box-shadow: 0px 0px 10px 2px var(--main-txt-color);
+  cursor: pointer;
 }
 
 .pet-card--container img {
@@ -16,5 +23,7 @@
 }
 
 .pet-card--container p {
+  font-weight: 500;
+  font-size: 0.8rem;
   text-transform: capitalize;
 }

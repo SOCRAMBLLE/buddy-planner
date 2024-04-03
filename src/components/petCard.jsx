@@ -3,8 +3,9 @@ import "./petCard.css";
 import dogIcon from "../assets/profile/dog.png";
 import catIcon from "../assets/profile/cat.png";
 import rabbitIcon from "../assets/profile/rabbit.png";
+import { Link } from "react-router-dom";
 
-const PetCard = ({ pet }) => {
+const PetCard = ({ pet, id }) => {
   let petImage;
   if (pet.type === "dog") {
     petImage = dogIcon;
@@ -16,15 +17,18 @@ const PetCard = ({ pet }) => {
   console.log("petCard", pet);
 
   return (
-    <div className="pet-card--container">
-      <h2>{pet.name}</h2>
-      <img src={pet.imageURL ? pet.imageURL : petImage} alt={pet.name} />
-      <p>{pet.breed}</p>
-    </div>
+    <Link className="pet-card--link" to={`pet?id=${id}`}>
+      <div className="pet-card--container">
+        <h2>{pet.name}</h2>
+        <img src={pet.imageURL ? pet.imageURL : petImage} alt={pet.name} />
+        <p>{pet.breed}</p>
+      </div>
+    </Link>
   );
 };
 PetCard.propTypes = {
   pet: PropTypes.object,
+  id: PropTypes.string,
 };
 
 export default PetCard;

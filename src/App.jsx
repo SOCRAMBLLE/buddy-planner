@@ -15,6 +15,7 @@ import AppLayout from "./pages/app/AppLayout";
 import AuthPage, { Action as FormAction } from "./pages/AuthPage";
 import ProfilePage, { Loader as PetLoader } from "./pages/app/ProfilePage";
 import BuddyRegPage from "./pages/app/BuddyRegister";
+import EditPet, { Loader as petLoader } from "./pages/app/EditPet";
 
 function App() {
   const router = createBrowserRouter(
@@ -38,6 +39,7 @@ function App() {
             }
           />
           <Route path="register-pet" element={<BuddyRegPage />} />
+          <Route path="pet" element={<EditPet />} loader={petLoader} />
         </Route>
         <Route
           path="app"

@@ -7,11 +7,9 @@ import { queryPets } from "../../app/api/firebase";
 
 export const Loader = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
   const userID = user.id;
   try {
     const pets = await queryPets(userID);
-    console.log("profilepage action:", pets);
     return pets;
   } catch (error) {
     throw new Error(error);
@@ -20,7 +18,6 @@ export const Loader = async () => {
 
 const ProfilePage = () => {
   const pets = useLoaderData();
-  console.log("profilepage component:", pets);
   const auth = UseAuth();
   const user = auth.user;
   const navigate = useNavigate();
@@ -46,7 +43,7 @@ const ProfilePage = () => {
               <h3>Your buddy&apos;s</h3>
               <div className="profile-page--pets">
                 {pets.map((pet, index) => (
-                  <PetCard key={index} pet={pet} />
+                  <PetCard key={index} id={pet.id} pet={pet.data} />
                 ))}
               </div>
               <Link to="register-pet" className="profile-page--addpet-btn">
