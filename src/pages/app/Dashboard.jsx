@@ -1,7 +1,8 @@
 import { useLoaderData } from "react-router-dom";
 import { queryPets } from "../../app/api/firebase";
 import "./Dashboard.css";
-import PetCard from "../../components/petCard";
+import DashPetCard from "../../components/DashPetCard";
+import PageMotion from "../../components/PageMotion";
 
 export const Loader = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -19,11 +20,15 @@ const Dashboard = () => {
   console.log(data);
 
   return (
-    <main className="dashboard--container">
-      {data.map((pet, index) => (
-        <PetCard key={index} pet={pet.data} id={pet.id} />
-      ))}
-    </main>
+    <PageMotion>
+      <main className="dashboard--container">
+        <div className="dash--pet-container">
+          {data.map((pet, index) => (
+            <DashPetCard key={index} pet={pet.data} id={pet.id} />
+          ))}
+        </div>
+      </main>
+    </PageMotion>
   );
 };
 

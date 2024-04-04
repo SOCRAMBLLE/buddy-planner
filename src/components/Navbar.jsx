@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import Logo from "../assets/brand/logo.png";
 import "./Navbar.css";
 import { UseAuth } from "../app/auth/auth";
-import { PawIcon } from "./ui/Icons";
+import pawIcon from "../assets/brand/paw.png";
 
 const NavBar = () => {
   const { user } = UseAuth();
@@ -42,7 +42,7 @@ const NavBar = () => {
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             <button className="navbar--paw-user">
-              <PawIcon />
+              <img src={pawIcon} />
             </button>
           </NavLink>
         )}

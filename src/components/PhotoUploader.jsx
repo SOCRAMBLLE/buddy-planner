@@ -11,10 +11,6 @@ const PhotoUploader = ({ onUpload }) => {
       alert("Please select a PNG or JPEG image file.");
       return;
     }
-    if (file.size > 1024 * 1024) {
-      alert("File size should not exceed 1MB.");
-      return;
-    }
     try {
       const photoURL = await uploadPetPhoto(file);
       setImageUrl(photoURL);
