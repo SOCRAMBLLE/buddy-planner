@@ -16,6 +16,7 @@ import ProfilePage, { Loader as PetLoader } from "./pages/app/ProfilePage";
 import BuddyRegPage from "./pages/app/BuddyRegister";
 import EditPet, { Loader as petLoader } from "./pages/app/EditPet";
 import Agenda from "./pages/app/Agenda";
+import Tasks, { Loader as tasksLoader } from "./pages/app/Tasks";
 
 function App() {
   const router = createBrowserRouter(
@@ -50,7 +51,7 @@ function App() {
         >
           <Route index element={<Dashboard />} loader={DashLoader} />
           <Route path="agenda" element={<Agenda />} />
-          <Route path="tasks" />
+          <Route path="tasks" element={<Tasks />} loader={tasksLoader} />
           <Route path="food" />
           <Route path="finance" />
           <Route path="settings" />

@@ -8,7 +8,7 @@
   margin: 0 0 1rem;
 }
 
-.profile-page--container img {
+.profile-page--container .profile-page--user-img {
   border-radius: 3rem;
   width: 100px;
   cursor: pointer;

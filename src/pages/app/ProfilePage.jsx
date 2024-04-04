@@ -3,7 +3,7 @@ import { UseAuth } from "../../app/auth/auth";
 import PageMotion from "../../components/PageMotion";
 import "./ProfilePage.css";
 import PetCard from "../../components/petCard";
-import { queryPets, uploadUserPhoto } from "../../app/api/firebase";
+import { queryPets } from "../../app/api/firebase";
 import userIcon from "../../assets/profile/user.png";
 // import { getAuth, updateProfile } from "firebase/auth";
 
@@ -58,6 +58,7 @@ const ProfilePage = () => {
         <h1>{user.name}</h1>
         <img
           // onClick={triggerFileInput}
+          className="profile-page--user-img"
           src={user.photoUrl ? user.photoUrl : userIcon}
         />
         {/* <input

@@ -23,6 +23,7 @@ GoogleIcon.propTypes = {
 const PawIcon = ({ className }) => {
   return (
     <svg
+      className={className}
       version="1.0"
       xmlns="http://www.w3.org/2000/svg"
       width="35px"

@@ -1,0 +1,56 @@
+.todo--container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.todo--tasks-container ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.todo--new-task {
+  display: flex;
+}
+
+.todo--new-task input {
+  width: 100%;
+  padding: 8px 10px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  border: 0;
+}
+
+.todo--new-task button,
+.todo--task-btns button {
+  height: 36px;
+  width: 50px;
+  padding: 0;
+  background-color: var(--main-txt-color);
+  color: var(--main-bg-color);
+  border: 1px solid;
+  transition: all ease-in-out 0.1s;
+}
+
+.todo--new-task button,
+.todo--task-btns button:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.todo--task-btns button:active,
+.todo--new-task button:active {
+  background-color: var(--light-color);
+}
+
+.todo--task {
+  margin: 4px 0;
+  background-color: white;
+  border-radius: 10px;
+  padding-left: 10px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

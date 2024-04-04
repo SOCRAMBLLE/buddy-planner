@@ -31,6 +31,7 @@ const firebaseConfig = {
 export const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 export const petsCollectionRef = collection(db, "pets");
+export const usersCollectionRef = collection(db, "users");
 
 export const getPets = async () => {
   const snapshot = await getDocs(petsCollectionRef);
@@ -115,4 +116,32 @@ export const deletePet = async (id) => {
   } catch (err) {
     throw new Error(err);
   }
+};
+
+export const fetchTasks = async (id) => {
+  try {
+    const user = doc(usersCollectionRef, id);
+    const snapshot = await getDoc(user);
+    const userData = snapshot.data();
+    const data = {
+      id: snapshot.id,
+      tasks: userData.Tasks,
+    };
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const addTask = async (userid, json) => {
+  const checkUserExists = await getDoc(usersCollectionRef, userid);
+  console.log(checkUserExists);
+  // try {
+  //   const userCollection = doc(usersCollectionRef, userid);
+  //   await updateDoc(userCollection, json);
+  //   return { success: true };
+  // } catch (error) {
+  //   throw new Error(error);
+  // }
+  return { id: "", tasks: {} };
 };

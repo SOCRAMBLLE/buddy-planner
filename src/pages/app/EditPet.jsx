@@ -12,9 +12,7 @@ import {
   getPet,
   uploadPetPhoto,
 } from "../../app/api/firebase";
-import dogImg from "../../assets/profile/dog.png";
-import catImg from "../../assets/profile/cat.png";
-import rabbitImg from "../../assets/profile/rabbit.png";
+import pawIcon from "../../assets/brand/paw.png";
 import { FaEdit } from "react-icons/fa";
 import { IoChevronBack } from "react-icons/io5";
 import { useEffect, useState } from "react";
@@ -101,23 +99,13 @@ const EditPet = () => {
     }
   };
 
-  const defaultPetImg = () => {
-    if (currentPet.data.type === "dog") {
-      return dogImg;
-    } else if (currentPet.data.type === "cat") {
-      return catImg;
-    } else if (currentPet.data.type === "rabbit") {
-      return rabbitImg;
-    }
-  };
-
   return (
     <PageMotion>
       <main className="editpet-page--container">
         <div className="editpet-page--img-container">
           <img
             onClick={triggerFileInput}
-            src={formData.imageURL ? formData.imageURL : defaultPetImg()}
+            src={formData.imageURL ? formData.imageURL : pawIcon}
           />
           <input
             id="fileInput"
