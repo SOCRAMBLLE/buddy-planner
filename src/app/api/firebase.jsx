@@ -11,6 +11,7 @@ import {
   doc,
   updateDoc,
   getDoc,
+  arrayRemove,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { readAndCompressImage } from "browser-image-resizer";
@@ -119,13 +120,22 @@ export const deletePet = async (id) => {
 };
 
 export const fetchTasks = async (id) => {
+  const sortTasks = (tasks) => {
+    return tasks.sort((a, b) => {
+      if (a.done !== b.done) {
+        return a.done ? 1 : -1;
+      }
+
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  };
   try {
     const user = doc(usersCollectionRef, id);
     const snapshot = await getDoc(user);
     const userData = snapshot.data();
     const data = {
       id: snapshot.id,
-      tasks: userData.Tasks,
+      tasks: sortTasks(userData.Tasks),
     };
     return data;
   } catch (err) {
@@ -134,14 +144,28 @@ export const fetchTasks = async (id) => {
 };
 
 export const addTask = async (userid, json) => {
-  const checkUserExists = await getDoc(usersCollectionRef, userid);
-  console.log(checkUserExists);
-  // try {
-  //   const userCollection = doc(usersCollectionRef, userid);
-  //   await updateDoc(userCollection, json);
-  //   return { success: true };
-  // } catch (error) {
-  //   throw new Error(error);
-  // }
-  return { id: "", tasks: {} };
+  try {
+    const tasks = { Tasks: json };
+    const userCollection = doc(usersCollectionRef, userid);
+    await updateDoc(userCollection, tasks);
+    return { success: true };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const deleteTask = async (userid, taskid) => {
+  const userDoc = doc(usersCollectionRef, userid);
+  const docSnap = await getDoc(userDoc);
+  if (docSnap.exists()) {
+    const userData = docSnap.data();
+    const updatedTasks = userData.Tasks.filter((task) => task.id !== taskid);
+
+    // Atualiza o documento com a nova array de tarefas
+    await updateDoc(userDoc, {
+      Tasks: updatedTasks,
+    });
+  } else {
+    console.log("No such document!");
+  }
 };
