@@ -143,7 +143,7 @@ export const fetchTasks = async (id) => {
   }
 };
 
-export const addTask = async (userid, json) => {
+export const updateTasks = async (userid, json) => {
   try {
     const tasks = { Tasks: json };
     const userCollection = doc(usersCollectionRef, userid);

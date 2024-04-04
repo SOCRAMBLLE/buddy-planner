@@ -4,7 +4,7 @@ import { Form } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { addTask, deleteTask } from "../app/api/firebase";
+import { deleteTask, updateTasks } from "../app/api/firebase";
 import { UseAuth } from "../app/auth/auth";
 
 const ToDoList = ({ data }) => {
@@ -30,7 +30,7 @@ const ToDoList = ({ data }) => {
     console.log("the task", newTask, " was submited");
     setTasks((prev) => [...prev, newTask]);
     try {
-      await addTask(user.id, tasks);
+      await updateTasks(user.id, tasks);
       setTaskInput("");
       return console.log("success");
     } catch (err) {
@@ -42,7 +42,11 @@ const ToDoList = ({ data }) => {
     setTasks((currentTasks) => {
       const updatedTasks = currentTasks.map((task) => {
         if (task.id === taskId) {
-          return { ...task, done: true, createdAt: new Date().toISOString() }; // Atualiza a data de criação ao concluir
+          return {
+            ...task,
+            done: !task.done,
+            createdAt: new Date().toISOString(),
+          }; // Atualiza a data de criação ao concluir
         }
         return task;
       });
@@ -59,6 +63,11 @@ const ToDoList = ({ data }) => {
     } catch (err) {
       throw new Error(err);
     }
+  };
+
+  const handleEditTask = async (taskId) => {
+    const newvalue = event.target.value;
+    console.log(newvalue);
   };
 
   return (
