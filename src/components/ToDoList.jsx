@@ -3,16 +3,27 @@ import "./ToDoList.css";
 import { Form } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { deleteTask, updateTasks } from "../app/api/firebase";
+import { FaEdit, FaTrash, FaPlus, FaRegSave } from "react-icons/fa";
+import { GrRevert } from "react-icons/gr";
+import { deleteTask, fetchTasks, updateTasks } from "../app/api/firebase";
 import { UseAuth } from "../app/auth/auth";
 
 const ToDoList = ({ data }) => {
   const { user } = UseAuth();
   const [taskInput, setTaskInput] = useState("");
+  const [tasksData, setTasksData] = useState(data.tasks || []);
+  const [editTaskId, setEditTaskId] = useState(null);
+  const [editInputValue, setEditInputValue] = useState("");
 
-  const [tasks, setTasks] = useState(data.tasks || []);
-  console.log("tasks:", tasks);
+  const fetchAndUpdateTasks = async () => {
+    try {
+      const updatedTasks = await fetchTasks(user.id);
+      setTasksData(updatedTasks.tasks);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleChange = (event) => {
     const { value } = event.target;
     setTaskInput(value);
@@ -26,27 +37,24 @@ const ToDoList = ({ data }) => {
       done: false,
       createdAt: new Date().toISOString(),
     };
-
-    console.log("the task", newTask, " was submited");
-    setTasks((prev) => [...prev, newTask]);
     try {
-      await updateTasks(user.id, tasks);
+      await updateTasks(user.id, [...tasksData, newTask]);
       setTaskInput("");
-      return console.log("success");
+      fetchAndUpdateTasks();
     } catch (err) {
       throw new Error(err);
     }
   };
 
   const markTaskAsDone = (taskId) => {
-    setTasks((currentTasks) => {
+    setTasksData((currentTasks) => {
       const updatedTasks = currentTasks.map((task) => {
         if (task.id === taskId) {
           return {
             ...task,
             done: !task.done,
             createdAt: new Date().toISOString(),
-          }; // Atualiza a data de criação ao concluir
+          };
         }
         return task;
       });
@@ -57,17 +65,24 @@ const ToDoList = ({ data }) => {
   const handleDeleteTask = async (taskId) => {
     try {
       await deleteTask(user.id, taskId);
-      const updatedTasks = tasks.filter((task) => task.id !== taskId);
-      setTasks(updatedTasks);
-      return console.log("delete success");
+      fetchAndUpdateTasks();
     } catch (err) {
       throw new Error(err);
     }
   };
 
-  const handleEditTask = async (taskId) => {
-    const newvalue = event.target.value;
-    console.log(newvalue);
+  const handleEditTask = async (taskId, newInput) => {
+    const updatedTasks = tasksData.map((task) =>
+      task.id === taskId ? { ...task, task: newInput } : task
+    );
+
+    try {
+      await updateTasks(user.id, updatedTasks);
+      setEditTaskId(null);
+      fetchAndUpdateTasks();
+    } catch (err) {
+      throw new Error(err);
+    }
   };
 
   return (
@@ -90,18 +105,52 @@ const ToDoList = ({ data }) => {
       </Form>
       <div className="todo--tasks-container">
         <ul>
-          {tasks.map((task, index) => (
-            <li className="todo--task" key={index}>
-              <p
-                onClick={() => markTaskAsDone(task.id)}
-                className={task.done ? "task-done" : ""}
-              >
-                {task.task}
-              </p>
+          {tasksData.map((task, index) => (
+            <li
+              className={`todo--task ${
+                editTaskId === task.id ? "lightblue" : "white"
+              } `}
+              key={index}
+            >
+              {editTaskId === task.id ? (
+                <Form onSubmit={() => handleEditTask(task.id, editInputValue)}>
+                  <input
+                    value={editInputValue}
+                    onChange={(e) => setEditInputValue(e.target.value)}
+                    autoFocus
+                    required
+                  />
+                </Form>
+              ) : (
+                <p
+                  onClick={() => markTaskAsDone(task.id)}
+                  className={task.done ? "task-done" : ""}
+                >
+                  {task.task}
+                </p>
+              )}
               <div className="todo--task-btns">
-                <button>
-                  <FaEdit />
-                </button>
+                {editTaskId === task.id ? (
+                  <>
+                    <button onClick={() => setEditTaskId(null)}>
+                      <GrRevert />
+                    </button>
+                    <button
+                      onClick={() => handleEditTask(task.id, editInputValue)}
+                    >
+                      <FaRegSave />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setEditTaskId(task.id);
+                      setEditInputValue(task.task);
+                    }}
+                  >
+                    <FaEdit />
+                  </button>
+                )}
                 <button onClick={() => handleDeleteTask(task.id)}>
                   <FaTrash />
                 </button>

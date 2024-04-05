@@ -147,8 +147,8 @@ export const updateTasks = async (userid, json) => {
   try {
     const tasks = { Tasks: json };
     const userCollection = doc(usersCollectionRef, userid);
-    await updateDoc(userCollection, tasks);
-    return { success: true };
+    const response = await updateDoc(userCollection, tasks);
+    return { success: true, response: response };
   } catch (error) {
     throw new Error(error);
   }
@@ -161,7 +161,6 @@ export const deleteTask = async (userid, taskid) => {
     const userData = docSnap.data();
     const updatedTasks = userData.Tasks.filter((task) => task.id !== taskid);
 
-    // Atualiza o documento com a nova array de tarefas
     await updateDoc(userDoc, {
       Tasks: updatedTasks,
     });
