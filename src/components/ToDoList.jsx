@@ -46,20 +46,16 @@ const ToDoList = ({ data }) => {
     }
   };
 
-  const markTaskAsDone = (taskId) => {
-    setTasksData((currentTasks) => {
-      const updatedTasks = currentTasks.map((task) => {
-        if (task.id === taskId) {
-          return {
-            ...task,
-            done: !task.done,
-            createdAt: new Date().toISOString(),
-          };
-        }
-        return task;
-      });
-      return updatedTasks;
-    });
+  const markTaskAsDone = async (taskId) => {
+    const updatedTasks = tasksData.map((task) =>
+      task.id === taskId ? { ...task, done: !task.done } : task
+    );
+    try {
+      await updateTasks(user.id, updatedTasks);
+      fetchAndUpdateTasks();
+    } catch (err) {
+      throw new Error(err);
+    }
   };
 
   const handleDeleteTask = async (taskId) => {
@@ -143,6 +139,7 @@ const ToDoList = ({ data }) => {
                   </>
                 ) : (
                   <button
+                    className={task.done ? "btn-task-done" : ""}
                     onClick={() => {
                       setEditTaskId(task.id);
                       setEditInputValue(task.task);

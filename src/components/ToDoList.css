@@ -12,6 +12,8 @@
 .todo--new-task {
   display: flex;
   width: 100%;
+  border-radius: 10px;
+  border: 1px solid white;
 }
 
 .todo--new-task input {
@@ -47,6 +49,8 @@
 }
 
 .todo--task {
+  border: 1px solid white;
+  overflow: hidden;
   margin: 4px 0;
   border-radius: 10px;
   height: 36px;
@@ -57,9 +61,11 @@
 
 .todo--task p {
   flex: 1;
-  padding-left: 10px;
+  padding: 6px 10px;
   color: var(--main-txt-color);
   cursor: pointer;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .todo--task form {
@@ -89,4 +95,10 @@
 
 .task-done {
   text-decoration: line-through;
+  background-color: var(--main-bg-color);
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+.btn-task-done {
+  display: none;
 }
