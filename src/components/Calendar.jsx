@@ -2,19 +2,27 @@ import "./Calendar.css";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import PageMotion from "./PageMotion";
-import { Await, Form } from "react-router-dom";
-import { getPet } from "../app/api/firebase";
+import { Form } from "react-router-dom";
+import { nanoid } from "nanoid";
+import { deleteEvent, fetchEvents, updateEvent } from "../app/api/firebase";
+import { UseAuth } from "../app/auth/auth";
+import PropTypes from "prop-types";
 
-const PetCalendar = ({ petsData }) => {
-  const data = petsData;
+const PetCalendar = ({ data }) => {
+  const { user } = UseAuth();
+  const userData = data;
+  const petsData = userData.pets;
+  const eventsData = userData.events;
+
   const [selectedDate, setSelectedDate] = useState(null);
-  const [events, setEvents] = useState([]);
+  console.log(selectedDate);
+  const [events, setEvents] = useState(eventsData || []);
   const [newEventForm, setNewEventForm] = useState(false);
   const [editEventForm, setEditEventForm] = useState(false);
   const [newEvent, setNewEvent] = useState({
     id: "",
     title: "",
-    date: "",
+    date: selectedDate,
     startTime: "",
     endTime: "",
     animals: [],
@@ -24,8 +32,21 @@ const PetCalendar = ({ petsData }) => {
   });
   const [editEvent, setEditEvent] = useState();
 
+  const fetchAndUpdateEvents = async () => {
+    try {
+      const updatedEvents = await fetchEvents(user.id);
+      const eventsWithDateObjects = updatedEvents.events.map((event) => ({
+        ...event,
+        date: new Date(event.date),
+      }));
+      setEvents(eventsWithDateObjects);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    const selDate = selectedDate?.toDateString();
+    const selDate = selectedDate;
     setNewEvent((prevEvent) => ({
       ...prevEvent,
       date: selDate,
@@ -33,7 +54,7 @@ const PetCalendar = ({ petsData }) => {
   }, [selectedDate]);
 
   const Date_Click_Fun = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(date.toDateString());
   };
 
   const Event_Data_Update = (event) => {
@@ -44,25 +65,29 @@ const PetCalendar = ({ petsData }) => {
     }));
   };
 
-  const Create_Event_Fun = () => {
+  const Event_Data_Edit_Update = (event) => {
+    const { name, value } = event.target;
+    setEditEvent((prevEvent) => ({
+      ...prevEvent,
+      [name]: value,
+    }));
+  };
+
+  const Create_Event_Fun = async () => {
     if (selectedDate && newEvent.title) {
       const newEventObject = {
         ...newEvent,
-        id: new Date().getTime(),
-        date: new Date(selectedDate),
+        id: nanoid(),
+        date: selectedDate,
       };
-      setNewEvent((prevEvent) => ({
-        ...prevEvent,
-        id: new Date().getTime(),
-      }));
-      setEvents([...events, newEventObject]);
-      setSelectedDate(null);
-      setSelectedDate(new Date(newEvent.date));
+      const updatedEvents = [...events, newEventObject];
+      await updateEvent(user.id, updatedEvents);
+      fetchAndUpdateEvents();
       setNewEventForm(false);
       setNewEvent({
         id: "",
         title: "",
-        date: "",
+        date: selectedDate,
         startTime: "",
         endTime: "",
         animals: [],
@@ -73,40 +98,44 @@ const PetCalendar = ({ petsData }) => {
     }
   };
 
-  const Update_Event_Fun = (eventId, newName) => {
+  const Update_Event_Fun = () => {
+    if (!editEvent || !editEvent.id) return;
+
     const updated_Events = events.map((event) => {
-      if (event.id === eventId) {
+      if (event.id === editEvent.id) {
         return {
-          ...event,
-          title: newName,
+          ...editEvent,
+          date: new Date(editEvent.date),
         };
       }
       return event;
     });
+
     setEvents(updated_Events);
+    setEditEventForm(false);
+    setEditEvent(null);
   };
 
-  const Delete_Event_Fun = (eventId) => {
-    const updated_Events = events.filter((event) => event.id !== eventId);
-    setEvents(updated_Events);
+  const Delete_Event_Fun = async (eventId) => {
+    try {
+      await deleteEvent(user.id, eventId);
+      fetchAndUpdateEvents();
+    } catch (err) {
+      throw new Error(err);
+    }
   };
 
-  const animalList = data.map((pet) => ({
+  const animalList = petsData.map((pet) => ({
     id: pet.id,
     name: pet.data.name,
     selected: false,
     photo: pet.data.imageURL,
   }));
 
-  const fetchPet = async (id) => {
-    try {
-      const pet = await getPet(id);
-      if (pet) {
-        return pet.data;
-      }
-    } catch (err) {
-      throw new Error(err);
-    }
+  const handleEditEvent = (event) => {
+    setEditEventForm(true);
+    setEditEvent(event);
+    console.log(editEvent);
   };
 
   return (
@@ -117,12 +146,10 @@ const PetCalendar = ({ petsData }) => {
             value={selectedDate}
             onClickDay={Date_Click_Fun}
             tileClassName={({ date }) =>
-              selectedDate &&
-              date.toDateString() === selectedDate.toDateString()
-                ? "selected"
-                : events.some(
-                    (event) => event.date.toDateString() === date.toDateString()
-                  )
+              events.some((event) => {
+                const eventDate = new Date(event.date);
+                return eventDate === date;
+              })
                 ? "event-marked"
                 : ""
             }
@@ -132,13 +159,16 @@ const PetCalendar = ({ petsData }) => {
         {selectedDate && (
           <PageMotion>
             <div className="event-container">
-              <button onClick={() => setNewEventForm(true)}>
+              <button
+                className="event--btn"
+                onClick={() => setNewEventForm(true)}
+              >
                 Create New Event
               </button>
               {newEventForm && (
                 <Form className="event-form">
                   <h2>{newEvent.title ? newEvent.title : "New Event"}</h2>
-                  <p>Selected Date: {selectedDate.toDateString()}</p>
+                  <p>Selected Date: {selectedDate}</p>
                   <input
                     type="text"
                     placeholder="Event Name"
@@ -193,7 +223,10 @@ const PetCalendar = ({ petsData }) => {
                     value={newEvent.notes}
                     onChange={Event_Data_Update}
                   ></textarea>
-                  <button className="create-btn" onClick={Create_Event_Fun}>
+                  <button
+                    className="event--btn create-btn"
+                    onClick={Create_Event_Fun}
+                  >
                     Add Event
                   </button>
                 </Form>
@@ -202,72 +235,152 @@ const PetCalendar = ({ petsData }) => {
                 <div className="event-list">
                   <h2> Events: </h2>{" "}
                   <div className="event-cards">
-                    {" "}
-                    {events.map((event) => {
-                      const eventDate = new Date(event.date);
-                      const selDate = new Date(selectedDate);
-                      const involvedAnimals = animalList.filter((animal) =>
-                        event.animals.includes(animal.id)
-                      );
-                      return eventDate.toDateString() ===
-                        selDate.toDateString() ? (
-                        <div key={event.id} className="event-card">
-                          <div className="event-card-header">
-                            <h4 className="event-title"> {event.title} </h4>{" "}
-                            <span className="event-date">
-                              {" "}
-                              {event.date.toDateString()}{" "}
-                            </span>{" "}
-                            {event.startTime && (
-                              <>
-                                <span>from {event.startTime}</span>{" "}
-                                {event.endTime && (
+                    {editEventForm ? (
+                      <Form className="event-form">
+                        <h2>{editEvent.title}</h2>
+                        <p>Selected Date: {selectedDate}</p>
+                        <input
+                          type="text"
+                          placeholder="Event Name"
+                          name="title"
+                          value={editEvent.title}
+                          onChange={Event_Data_Edit_Update}
+                        />
+                        <input
+                          type="time"
+                          name="startTime"
+                          value={editEvent.startTime}
+                          onChange={Event_Data_Edit_Update}
+                        />
+                        <input
+                          type="time"
+                          name="endTime"
+                          value={editEvent.endTime}
+                          onChange={Event_Data_Edit_Update}
+                        />
+                        <select
+                          name="animals"
+                          multiple
+                          value={editEvent.animals}
+                          onChange={Event_Data_Edit_Update}
+                        >
+                          {animalList.map((animal) => (
+                            <option key={animal.id} value={animal.id}>
+                              {animal.name}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          placeholder="Location"
+                          name="location"
+                          value={editEvent.location}
+                          onChange={Event_Data_Edit_Update}
+                        />
+                        <select
+                          name="alert"
+                          value={editEvent.alert}
+                          onChange={Event_Data_Edit_Update}
+                        >
+                          <option value="1hour">1 Hour Before</option>
+                          <option value="2hours">2 Hours Before</option>
+                          <option value="1day">1 Day Before</option>
+                          <option value="1week">1 Week Before</option>
+                        </select>
+                        <textarea
+                          placeholder="Notes"
+                          name="notes"
+                          value={editEvent.notes}
+                          onChange={Event_Data_Edit_Update}
+                        ></textarea>
+                        <div className="event--edit-btns">
+                          <button
+                            className="event--btn cancel-btn"
+                            onClick={() => setEditEventForm(false)}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            className="event--btn save-btn"
+                            onClick={Update_Event_Fun}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </Form>
+                    ) : (
+                      <>
+                        {" "}
+                        {events.map((event) => {
+                          const eventDate = new Date(event.date);
+                          const selDate = new Date(selectedDate);
+                          const involvedAnimals = animalList.filter((animal) =>
+                            event.animals.includes(animal.id)
+                          );
+                          return eventDate.toDateString() ===
+                            selDate.toDateString() ? (
+                            <div key={event.id} className="event-card">
+                              <div className="event-card-header">
+                                <h4 className="event-title"> {event.title} </h4>{" "}
+                                <span className="event-date">
+                                  {" "}
+                                  {eventDate.toDateString()}{" "}
+                                </span>{" "}
+                                {event.startTime && (
                                   <>
-                                    <span>until {event.endTime}</span>{" "}
+                                    <span>from {event.startTime}</span>{" "}
+                                    {event.endTime && (
+                                      <>
+                                        <span>until {event.endTime}</span>{" "}
+                                      </>
+                                    )}
                                   </>
                                 )}
-                              </>
-                            )}
-                          </div>{" "}
-                          <div className="event-card-body">
-                            {event.location && (
-                              <>
-                                <p>Location: {event.location}</p>{" "}
-                              </>
-                            )}
-                            <p>Involved pets:</p>{" "}
-                            <div className="involved-pets">
-                              {involvedAnimals.map((animal) => (
-                                <div
-                                  key={animal.id}
-                                  className="involved-pets--pet"
-                                >
-                                  <div>
-                                    <img src={animal.photo} alt={animal.name} />
-                                    <pre>{animal.name}</pre>
-                                  </div>
+                              </div>{" "}
+                              <div className="event-card-body">
+                                {event.location && (
+                                  <>
+                                    <p>Location: {event.location}</p>{" "}
+                                  </>
+                                )}
+                                <p>Involved pets:</p>{" "}
+                                <div className="involved-pets">
+                                  {involvedAnimals.map((animal) => (
+                                    <div
+                                      key={animal.id}
+                                      className="involved-pets--pet"
+                                    >
+                                      <div>
+                                        <img
+                                          src={animal.photo}
+                                          alt={animal.name}
+                                        />
+                                        <pre>{animal.name}</pre>
+                                      </div>
+                                    </div>
+                                  ))}
                                 </div>
-                              ))}
+                                {event.notes && <pre>{event.notes}</pre>}
+                              </div>{" "}
+                              <div className="event-actions">
+                                <button
+                                  className="event--btn update-btn"
+                                  onClick={() => handleEditEvent(event)}
+                                >
+                                  Update Event{" "}
+                                </button>{" "}
+                                <button
+                                  className="event--btn delete-btn"
+                                  onClick={() => Delete_Event_Fun(event.id)}
+                                >
+                                  Delete Event{" "}
+                                </button>{" "}
+                              </div>{" "}
                             </div>
-                            {event.notes && <pre>{event.notes}</pre>}
-                          </div>{" "}
-                          <div className="event-actions">
-                            <button
-                              className="update-btn"
-                              onClick={() => setEditEventForm(true)}
-                            >
-                              Update Event{" "}
-                            </button>{" "}
-                            <button
-                              className="delete-btn"
-                              onClick={() => Delete_Event_Fun(event.id)}
-                            >
-                              Delete Event{" "}
-                            </button>{" "}
-                          </div>{" "}
-                        </div>
-                      ) : null;
-                    })}{" "}
+                          ) : null;
+                        })}{" "}
+                      </>
+                    )}
                   </div>{" "}
                 </div>
               )}{" "}
@@ -277,6 +390,10 @@ const PetCalendar = ({ petsData }) => {
       </div>{" "}
     </div>
   );
+};
+
+PetCalendar.propTypes = {
+  data: PropTypes.object,
 };
 
 export default PetCalendar;

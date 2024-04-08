@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router-dom";
-import { queryPets } from "../../app/api/firebase";
+import { fetchEvents, queryPets } from "../../app/api/firebase";
 import PetCalendar from "../../components/Calendar";
 import PageMotion from "../../components/PageMotion";
 import "./Agenda.css";
@@ -9,18 +9,24 @@ export const Loader = async () => {
   const userID = user.id;
   try {
     const pets = await queryPets(userID);
-    return pets;
+    const events = await fetchEvents(userID);
+    const data = {
+      pets: pets,
+      events: events.events,
+    };
+    console.log(data);
+    return data;
   } catch (error) {
     throw new Error(error);
   }
 };
 
 const Agenda = () => {
-  const petsData = useLoaderData();
+  const data = useLoaderData();
   return (
     <PageMotion>
       <main className="agenda-page--container">
-        <PetCalendar petsData={petsData} />
+        <PetCalendar data={data} />
       </main>
     </PageMotion>
   );

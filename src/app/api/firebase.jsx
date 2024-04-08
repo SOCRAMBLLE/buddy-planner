@@ -11,7 +11,6 @@ import {
   doc,
   updateDoc,
   getDoc,
-  arrayRemove,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { readAndCompressImage } from "browser-image-resizer";
@@ -163,6 +162,49 @@ export const deleteTask = async (userid, taskid) => {
 
     await updateDoc(userDoc, {
       Tasks: updatedTasks,
+    });
+  } else {
+    console.log("No such document!");
+  }
+};
+
+export const fetchEvents = async (id) => {
+  try {
+    const user = doc(usersCollectionRef, id);
+    const snapshot = await getDoc(user);
+    const userData = snapshot.data();
+    const data = {
+      id: snapshot.id,
+      events: userData.Events,
+    };
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const updateEvent = async (userid, json) => {
+  try {
+    const events = { Events: json };
+    const userCollection = doc(usersCollectionRef, userid);
+    const response = await updateDoc(userCollection, events);
+    return { success: true, response: response };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const deleteEvent = async (userid, eventid) => {
+  const userDoc = doc(usersCollectionRef, userid);
+  const docSnap = await getDoc(userDoc);
+  if (docSnap.exists()) {
+    const userData = docSnap.data();
+    const updatedEvents = userData.Events.filter(
+      (event) => event.id !== eventid
+    );
+
+    await updateDoc(userDoc, {
+      Events: updatedEvents,
     });
   } else {
     console.log("No such document!");

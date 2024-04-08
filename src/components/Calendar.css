@@ -17,6 +17,10 @@
   width: 700px;
 }
 
+.react-calendar .react-calendar__navigation__label__labelText {
+  font-weight: 600;
+}
+
 .react-calendar--doubleView .react-calendar__viewContainer {
   display: flex;
   margin: -0.5em;
@@ -127,7 +131,7 @@
 
 .react-calendar__tile--now {
   background: transparent;
-  border: 1px solid var(--main-txt-color) !important;
+  border: 1px solid white !important;
 }
 
 .react-calendar__tile--now:enabled:hover,
@@ -224,5 +228,49 @@
 }
 
 .event-actions {
+  display: flex;
+  justify-content: space-between;
   margin: 10px 0;
+}
+
+.event--btn {
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 500;
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 10px #333;
+  background-color: rgb(3, 107, 50);
+  cursor: pointer;
+}
+
+.event--btn.create-btn {
+  margin: 5px 0;
+  width: 100px;
+  background-color: var(--main-txt-color);
+}
+.event--btn.cancel-btn {
+  background-color: var(--main-txt-color);
+  margin: 5px 0;
+  width: 100px;
+}
+.event--btn.save-btn {
+  background-color: rgb(3, 107, 50);
+  margin: 5px 0;
+  width: 100px;
+}
+
+.event--btn.update-btn {
+  background-color: var(--main-txt-color);
+}
+.event--btn.delete-btn {
+  background-color: rgb(179, 29, 10);
+}
+
+.event--edit-btns {
+  display: flex;
+  justify-content: space-between;
 }
