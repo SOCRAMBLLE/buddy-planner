@@ -102,3 +102,9 @@
 .btn-task-done {
   display: none;
 }
+
+.task-status-icon {
+  display: flex;
+  cursor: pointer;
+  margin: auto 8px;
+}

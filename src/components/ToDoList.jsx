@@ -3,8 +3,7 @@ import "./ToDoList.css";
 import { Form } from "react-router-dom";
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { FaEdit, FaTrash, FaPlus, FaRegSave } from "react-icons/fa";
-import { GrRevert } from "react-icons/gr";
+import { FaCheckCircle, FaTrash, FaPlus, FaRegCircle } from "react-icons/fa";
 import { deleteTask, fetchTasks, updateTasks } from "../app/api/firebase";
 import { UseAuth } from "../app/auth/auth";
 
@@ -108,46 +107,34 @@ const ToDoList = ({ data }) => {
               } `}
               key={index}
             >
+              <div
+                onClick={() => markTaskAsDone(task.id)}
+                className="task-status-icon"
+              >
+                {task.done ? <FaCheckCircle /> : <FaRegCircle />}
+              </div>
               {editTaskId === task.id ? (
                 <Form onSubmit={() => handleEditTask(task.id, editInputValue)}>
                   <input
                     value={editInputValue}
                     onChange={(e) => setEditInputValue(e.target.value)}
+                    onBlur={() => handleEditTask(task.id, editInputValue)}
                     autoFocus
                     required
                   />
                 </Form>
               ) : (
                 <p
-                  onClick={() => markTaskAsDone(task.id)}
+                  onClick={() => {
+                    setEditTaskId(task.id);
+                    setEditInputValue(task.task);
+                  }}
                   className={task.done ? "task-done" : ""}
                 >
                   {task.task}
                 </p>
               )}
               <div className="todo--task-btns">
-                {editTaskId === task.id ? (
-                  <>
-                    <button onClick={() => setEditTaskId(null)}>
-                      <GrRevert />
-                    </button>
-                    <button
-                      onClick={() => handleEditTask(task.id, editInputValue)}
-                    >
-                      <FaRegSave />
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className={task.done ? "btn-task-done" : ""}
-                    onClick={() => {
-                      setEditTaskId(task.id);
-                      setEditInputValue(task.task);
-                    }}
-                  >
-                    <FaEdit />
-                  </button>
-                )}
                 <button onClick={() => handleDeleteTask(task.id)}>
                   <FaTrash />
                 </button>
