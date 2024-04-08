@@ -15,8 +15,9 @@ import AuthPage, { Action as FormAction } from "./pages/AuthPage";
 import ProfilePage, { Loader as PetLoader } from "./pages/app/ProfilePage";
 import BuddyRegPage from "./pages/app/BuddyRegister";
 import EditPet, { Loader as petLoader } from "./pages/app/EditPet";
-import Agenda from "./pages/app/Agenda";
+import Agenda, { Loader as agendaLoader } from "./pages/app/Agenda";
 import Tasks, { Loader as tasksLoader } from "./pages/app/Tasks";
+import { ErrorPage, NotFound } from "./pages/app/error-page";
 
 function App() {
   const router = createBrowserRouter(
@@ -25,10 +26,14 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
-        <Route path="auth">
-          <Route index action={FormAction} element={<AuthPage />} />
-        </Route>
-        <Route path="profile">
+        <Route
+          path="auth"
+          action={FormAction}
+          element={<AuthPage />}
+          errorElement={<ErrorPage />}
+        />
+
+        <Route path="profile" errorElement={<ErrorPage />}>
           <Route
             index
             loader={PetLoader}
@@ -48,14 +53,16 @@ function App() {
               <AppLayout />
             </PrivateRoute>
           }
+          errorElement={<ErrorPage />}
         >
           <Route index element={<Dashboard />} loader={DashLoader} />
-          <Route path="agenda" element={<Agenda />} />
+          <Route path="agenda" element={<Agenda />} loader={agendaLoader} />
           <Route path="tasks" element={<Tasks />} loader={tasksLoader} />
           <Route path="food" />
           <Route path="finance" />
           <Route path="settings" />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Route>
     )
   );
