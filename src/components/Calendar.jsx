@@ -2,13 +2,15 @@ import "./Calendar.css";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import PageMotion from "./PageMotion";
-import { Form } from "react-router-dom";
+import { Await, Form } from "react-router-dom";
+import { getPet } from "../app/api/firebase";
 
 const PetCalendar = ({ petsData }) => {
   const data = petsData;
   const [selectedDate, setSelectedDate] = useState(null);
   const [events, setEvents] = useState([]);
   const [newEventForm, setNewEventForm] = useState(false);
+  const [editEventForm, setEditEventForm] = useState(false);
   const [newEvent, setNewEvent] = useState({
     id: "",
     title: "",
@@ -20,8 +22,7 @@ const PetCalendar = ({ petsData }) => {
     alert: "",
     notes: "",
   });
-
-  console.log(newEvent);
+  const [editEvent, setEditEvent] = useState();
 
   useEffect(() => {
     const selDate = selectedDate?.toDateString();
@@ -94,7 +95,19 @@ const PetCalendar = ({ petsData }) => {
     id: pet.id,
     name: pet.data.name,
     selected: false,
+    photo: pet.data.imageURL,
   }));
+
+  const fetchPet = async (id) => {
+    try {
+      const pet = await getPet(id);
+      if (pet) {
+        return pet.data;
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
 
   return (
     <div className="app">
@@ -187,42 +200,70 @@ const PetCalendar = ({ petsData }) => {
               )}
               {selectedDate && events.length > 0 && (
                 <div className="event-list">
-                  <h2> My Created Event List </h2>{" "}
+                  <h2> Events: </h2>{" "}
                   <div className="event-cards">
                     {" "}
                     {events.map((event) => {
                       const eventDate = new Date(event.date);
                       const selDate = new Date(selectedDate);
+                      const involvedAnimals = animalList.filter((animal) =>
+                        event.animals.includes(animal.id)
+                      );
                       return eventDate.toDateString() ===
                         selDate.toDateString() ? (
                         <div key={event.id} className="event-card">
                           <div className="event-card-header">
+                            <h4 className="event-title"> {event.title} </h4>{" "}
                             <span className="event-date">
                               {" "}
                               {event.date.toDateString()}{" "}
                             </span>{" "}
-                            <div className="event-actions">
-                              <button
-                                className="update-btn"
-                                onClick={() =>
-                                  Update_Event_Fun(
-                                    event.id,
-                                    prompt("ENTER NEW TITLE")
-                                  )
-                                }
-                              >
-                                Update Event{" "}
-                              </button>{" "}
-                              <button
-                                className="delete-btn"
-                                onClick={() => Delete_Event_Fun(event.id)}
-                              >
-                                Delete Event{" "}
-                              </button>{" "}
-                            </div>{" "}
+                            {event.startTime && (
+                              <>
+                                <span>from {event.startTime}</span>{" "}
+                                {event.endTime && (
+                                  <>
+                                    <span>until {event.endTime}</span>{" "}
+                                  </>
+                                )}
+                              </>
+                            )}
                           </div>{" "}
                           <div className="event-card-body">
-                            <p className="event-title"> {event.title} </p>{" "}
+                            {event.location && (
+                              <>
+                                <p>Location: {event.location}</p>{" "}
+                              </>
+                            )}
+                            <p>Involved pets:</p>{" "}
+                            <div className="involved-pets">
+                              {involvedAnimals.map((animal) => (
+                                <div
+                                  key={animal.id}
+                                  className="involved-pets--pet"
+                                >
+                                  <div>
+                                    <img src={animal.photo} alt={animal.name} />
+                                    <pre>{animal.name}</pre>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            {event.notes && <pre>{event.notes}</pre>}
+                          </div>{" "}
+                          <div className="event-actions">
+                            <button
+                              className="update-btn"
+                              onClick={() => setEditEventForm(true)}
+                            >
+                              Update Event{" "}
+                            </button>{" "}
+                            <button
+                              className="delete-btn"
+                              onClick={() => Delete_Event_Fun(event.id)}
+                            >
+                              Delete Event{" "}
+                            </button>{" "}
                           </div>{" "}
                         </div>
                       ) : null;
