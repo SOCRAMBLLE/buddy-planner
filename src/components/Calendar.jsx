@@ -8,6 +8,7 @@ import { deleteEvent, fetchEvents, updateEvent } from "../app/api/firebase";
 import { UseAuth } from "../app/auth/auth";
 import PropTypes from "prop-types";
 import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
+import PetCheck from "./ui/petCheck";
 
 const PetCalendar = ({ data }) => {
   const { user } = UseAuth();
@@ -19,22 +20,26 @@ const PetCalendar = ({ data }) => {
   const [events, setEvents] = useState(eventsData || []);
   const [newEventForm, setNewEventForm] = useState(false);
   const [editEventForm, setEditEventForm] = useState(false);
+  const [buddies, setBuddies] = useState(
+    petsData.map((pet) => ({
+      id: pet.id,
+      name: pet.data.name,
+      selected: false,
+      photo: pet.data.imageURL,
+    }))
+  );
   const [newEvent, setNewEvent] = useState({
     id: "",
     title: "",
     date: selectedDate,
     startTime: "",
     endTime: "",
-    animals: [],
+    animals: buddies,
     location: "",
     alert: "",
     notes: "",
   });
   const [editEvent, setEditEvent] = useState();
-
-  useEffect(() => {
-    fetchAndUpdateEvents();
-  }, []);
 
   const fetchAndUpdateEvents = async () => {
     try {
@@ -44,7 +49,6 @@ const PetCalendar = ({ data }) => {
         date: event.date,
       }));
       setEvents(eventsWithDateObjects);
-      console.log("Fetched events");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -80,10 +84,14 @@ const PetCalendar = ({ data }) => {
 
   const Create_Event_Fun = async () => {
     if (selectedDate && newEvent.title) {
+      const selectedAnimalIds = buddies
+        .filter((buddy) => buddy.selected)
+        .map((buddy) => buddy.id);
       const newEventObject = {
         ...newEvent,
         id: nanoid(),
         date: selectedDate.toISOString(),
+        animals: selectedAnimalIds,
       };
       const updatedEvents = [...events, newEventObject];
       await updateEvent(
@@ -95,30 +103,21 @@ const PetCalendar = ({ data }) => {
       );
       fetchAndUpdateEvents();
       setNewEventForm(false);
-      // setSelectedDate(newEvent.date);
-      // setNewEvent({
-      //   id: "",
-      //   title: "",
-      //   date: selectedDate,
-      //   startTime: "",
-      //   endTime: "",
-      //   animals: [],
-      //   location: "",
-      //   alert: "",
-      //   notes: "",
-      // });
       resetNewEventForm();
     }
   };
 
   const Update_Event_Fun = async () => {
     if (!editEvent || !editEvent.id) return;
-
+    const selectedAnimalIds = buddies
+      .filter((buddy) => buddy.selected)
+      .map((buddy) => buddy.id);
     const updatedEvents = events.map((event) => {
       if (event.id === editEvent.id) {
         return {
           ...editEvent,
-          date: editEvent.date.toISOString(),
+          date: editEvent.date,
+          animals: selectedAnimalIds,
         };
       }
       return event;
@@ -150,14 +149,31 @@ const PetCalendar = ({ data }) => {
     }
   };
 
-  const animalList = petsData.map((pet) => ({
-    id: pet.id,
-    name: pet.data.name,
-    selected: false,
-    photo: pet.data.imageURL,
-  }));
+  const handleBuddyFormClick = (buddyName) => {
+    const updatedBuddies = buddies.map((buddy) => {
+      if (buddy.name === buddyName) {
+        return { ...buddy, selected: !buddy.selected };
+      }
+      return buddy;
+    });
+    setBuddies(updatedBuddies);
+
+    if (editEventForm) {
+      setEditEvent((prev) => ({
+        ...prev,
+        animals: updatedBuddies
+          .filter((buddy) => buddy.selected)
+          .map((buddy) => buddy.id),
+      }));
+    }
+  };
 
   const handleEditEvent = (event) => {
+    const updatedBuddies = buddies.map((buddy) => ({
+      ...buddy,
+      selected: event.animals.includes(buddy.id),
+    }));
+    setBuddies(updatedBuddies);
     setEditEventForm(true);
     setEditEvent(event);
   };
@@ -178,6 +194,14 @@ const PetCalendar = ({ data }) => {
   };
 
   const resetNewEventForm = () => {
+    setBuddies(
+      petsData.map((pet) => ({
+        id: pet.id,
+        name: pet.data.name,
+        selected: false,
+        photo: pet.data.imageURL,
+      }))
+    );
     setNewEvent({
       id: "",
       title: "",
@@ -220,46 +244,23 @@ const PetCalendar = ({ data }) => {
           <PageMotion>
             <div className="event-container">
               <button
-                className="event--btn"
+                className="event--btn event-btn--create"
                 onClick={() => setNewEventForm(true)}
               >
-                Create New Event
+                <FaPlus />
               </button>
               {newEventForm && (
                 <Form className="event-form">
                   <h2>{newEvent.title ? newEvent.title : "New Event"}</h2>
                   <p>Selected Date: {selectedDate.toDateString()}</p>
+
                   <input
                     type="text"
-                    placeholder="Event Name"
+                    placeholder="Title"
                     name="title"
                     value={newEvent.title}
                     onChange={Event_Data_Update}
                   />
-                  <input
-                    type="time"
-                    name="startTime"
-                    value={newEvent.startTime}
-                    onChange={Event_Data_Update}
-                  />
-                  <input
-                    type="time"
-                    name="endTime"
-                    value={newEvent.endTime}
-                    onChange={Event_Data_Update}
-                  />
-                  <select
-                    name="animals"
-                    multiple
-                    value={newEvent.animals}
-                    onChange={Event_Data_Update}
-                  >
-                    {animalList.map((animal) => (
-                      <option key={animal.id} value={animal.id}>
-                        {animal.name}
-                      </option>
-                    ))}
-                  </select>
                   <input
                     type="text"
                     placeholder="Location"
@@ -267,16 +268,52 @@ const PetCalendar = ({ data }) => {
                     value={newEvent.location}
                     onChange={Event_Data_Update}
                   />
-                  <select
-                    name="alert"
-                    value={newEvent.alert}
-                    onChange={Event_Data_Update}
-                  >
-                    <option value="1hour">1 Hour Before</option>
-                    <option value="2hours">2 Hours Before</option>
-                    <option value="1day">1 Day Before</option>
-                    <option value="1week">1 Week Before</option>
-                  </select>
+                  <label>
+                    Starts
+                    <input
+                      type="time"
+                      name="startTime"
+                      value={newEvent.startTime}
+                      onChange={Event_Data_Update}
+                    />
+                  </label>
+                  <label>
+                    Ends
+                    <input
+                      type="time"
+                      name="endTime"
+                      value={newEvent.endTime}
+                      onChange={Event_Data_Update}
+                    />
+                  </label>
+                  <label className="buddy-form">
+                    Buddy implied
+                    <div>
+                      {buddies.map((animal) => (
+                        <PetCheck
+                          key={animal.id}
+                          petName={animal.name}
+                          petPhoto={animal.photo}
+                          isToggled={animal.selected}
+                          onClick={() => handleBuddyFormClick(animal.name)}
+                        />
+                      ))}
+                    </div>
+                  </label>
+                  <label>
+                    Alert
+                    <select
+                      name="alert"
+                      value={newEvent.alert}
+                      onChange={Event_Data_Update}
+                    >
+                      <option value="1hour">No alert</option>
+                      <option value="1hour">1 Hour Before</option>
+                      <option value="2hours">2 Hours Before</option>
+                      <option value="1day">1 Day Before</option>
+                      <option value="1week">1 Week Before</option>
+                    </select>
+                  </label>
                   <textarea
                     placeholder="Notes"
                     name="notes"
@@ -306,7 +343,7 @@ const PetCalendar = ({ data }) => {
                     {editEventForm ? (
                       <Form className="event-form">
                         <h2>{editEvent.title}</h2>
-                        <p>Selected Date: {selectedDate}</p>
+                        <p>Selected Date: {selectedDate.toDateString()}</p>
                         <input
                           type="text"
                           placeholder="Event Name"
@@ -326,18 +363,22 @@ const PetCalendar = ({ data }) => {
                           value={editEvent.endTime}
                           onChange={Event_Data_Edit_Update}
                         />
-                        <select
-                          name="animals"
-                          multiple
-                          value={editEvent.animals}
-                          onChange={Event_Data_Edit_Update}
-                        >
-                          {animalList.map((animal) => (
-                            <option key={animal.id} value={animal.id}>
-                              {animal.name}
-                            </option>
-                          ))}
-                        </select>
+                        <label className="buddy-form">
+                          Buddy implied
+                          <div>
+                            {buddies.map((animal) => (
+                              <PetCheck
+                                key={animal.id}
+                                petName={animal.name}
+                                petPhoto={animal.photo}
+                                isToggled={animal.selected}
+                                onClick={() =>
+                                  handleBuddyFormClick(animal.name)
+                                }
+                              />
+                            ))}
+                          </div>
+                        </label>
                         <input
                           type="text"
                           placeholder="Location"
@@ -382,7 +423,7 @@ const PetCalendar = ({ data }) => {
                         {events.map((event) => {
                           const eventDate = new Date(event.date);
                           const selDate = selectedDate;
-                          const involvedAnimals = animalList.filter((animal) =>
+                          const involvedAnimals = buddies.filter((animal) =>
                             event.animals.includes(animal.id)
                           );
                           return eventDate.toDateString() ===
