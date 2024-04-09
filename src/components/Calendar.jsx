@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import { deleteEvent, fetchEvents, updateEvent } from "../app/api/firebase";
 import { UseAuth } from "../app/auth/auth";
 import PropTypes from "prop-types";
+import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 
 const PetCalendar = ({ data }) => {
   const { user } = UseAuth();
@@ -15,7 +16,6 @@ const PetCalendar = ({ data }) => {
   const eventsData = userData.events;
 
   const [selectedDate, setSelectedDate] = useState(null);
-  console.log(selectedDate);
   const [events, setEvents] = useState(eventsData || []);
   const [newEventForm, setNewEventForm] = useState(false);
   const [editEventForm, setEditEventForm] = useState(false);
@@ -32,14 +32,19 @@ const PetCalendar = ({ data }) => {
   });
   const [editEvent, setEditEvent] = useState();
 
+  useEffect(() => {
+    fetchAndUpdateEvents();
+  }, []);
+
   const fetchAndUpdateEvents = async () => {
     try {
       const updatedEvents = await fetchEvents(user.id);
       const eventsWithDateObjects = updatedEvents.events.map((event) => ({
         ...event,
-        date: new Date(event.date),
+        date: event.date,
       }));
       setEvents(eventsWithDateObjects);
+      console.log("Fetched events");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -54,7 +59,7 @@ const PetCalendar = ({ data }) => {
   }, [selectedDate]);
 
   const Date_Click_Fun = (date) => {
-    setSelectedDate(date.toDateString());
+    setSelectedDate(date);
   };
 
   const Event_Data_Update = (event) => {
@@ -78,42 +83,62 @@ const PetCalendar = ({ data }) => {
       const newEventObject = {
         ...newEvent,
         id: nanoid(),
-        date: selectedDate,
+        date: selectedDate.toISOString(),
       };
       const updatedEvents = [...events, newEventObject];
-      await updateEvent(user.id, updatedEvents);
+      await updateEvent(
+        user.id,
+        updatedEvents.map((event) => ({
+          ...event,
+          date: new Date(event.date).toISOString(),
+        }))
+      );
       fetchAndUpdateEvents();
       setNewEventForm(false);
-      setNewEvent({
-        id: "",
-        title: "",
-        date: selectedDate,
-        startTime: "",
-        endTime: "",
-        animals: [],
-        location: "",
-        alert: "",
-        notes: "",
-      });
+      // setSelectedDate(newEvent.date);
+      // setNewEvent({
+      //   id: "",
+      //   title: "",
+      //   date: selectedDate,
+      //   startTime: "",
+      //   endTime: "",
+      //   animals: [],
+      //   location: "",
+      //   alert: "",
+      //   notes: "",
+      // });
+      resetNewEventForm();
     }
   };
 
-  const Update_Event_Fun = () => {
+  const Update_Event_Fun = async () => {
     if (!editEvent || !editEvent.id) return;
 
-    const updated_Events = events.map((event) => {
+    const updatedEvents = events.map((event) => {
       if (event.id === editEvent.id) {
         return {
           ...editEvent,
-          date: new Date(editEvent.date),
+          date: editEvent.date.toISOString(),
         };
       }
       return event;
     });
 
-    setEvents(updated_Events);
-    setEditEventForm(false);
-    setEditEvent(null);
+    try {
+      await updateEvent(
+        user.id,
+        updatedEvents.map((event) => ({
+          ...event,
+          date: new Date(event.date).toISOString(),
+        }))
+      );
+      fetchAndUpdateEvents();
+
+      setEditEventForm(false);
+      setEditEvent(null);
+    } catch (err) {
+      throw new Error(err);
+    }
   };
 
   const Delete_Event_Fun = async (eventId) => {
@@ -135,7 +160,49 @@ const PetCalendar = ({ data }) => {
   const handleEditEvent = (event) => {
     setEditEventForm(true);
     setEditEvent(event);
-    console.log(editEvent);
+  };
+
+  const handleCancel = () => {
+    setNewEventForm(false);
+    setNewEvent({
+      id: "",
+      title: "",
+      date: selectedDate,
+      startTime: "",
+      endTime: "",
+      animals: [],
+      location: "",
+      alert: "",
+      notes: "",
+    });
+  };
+
+  const resetNewEventForm = () => {
+    setNewEvent({
+      id: "",
+      title: "",
+      date: null,
+      startTime: "",
+      endTime: "",
+      animals: [],
+      location: "",
+      alert: "",
+      notes: "",
+    });
+  };
+
+  const tileClassName = ({ date, view }) => {
+    if (view === "month") {
+      const calendarDateAsString = date.toISOString().split("T")[0];
+      return events.some((event) => {
+        const eventDateAsString = new Date(event.date)
+          .toISOString()
+          .split("T")[0];
+        return eventDateAsString === calendarDateAsString;
+      })
+        ? "event-marked"
+        : "";
+    }
   };
 
   return (
@@ -145,14 +212,7 @@ const PetCalendar = ({ data }) => {
           <Calendar
             value={selectedDate}
             onClickDay={Date_Click_Fun}
-            tileClassName={({ date }) =>
-              events.some((event) => {
-                const eventDate = new Date(event.date);
-                return eventDate === date;
-              })
-                ? "event-marked"
-                : ""
-            }
+            tileClassName={tileClassName}
           />{" "}
         </div>
 
@@ -168,7 +228,7 @@ const PetCalendar = ({ data }) => {
               {newEventForm && (
                 <Form className="event-form">
                   <h2>{newEvent.title ? newEvent.title : "New Event"}</h2>
-                  <p>Selected Date: {selectedDate}</p>
+                  <p>Selected Date: {selectedDate.toDateString()}</p>
                   <input
                     type="text"
                     placeholder="Event Name"
@@ -223,12 +283,20 @@ const PetCalendar = ({ data }) => {
                     value={newEvent.notes}
                     onChange={Event_Data_Update}
                   ></textarea>
-                  <button
-                    className="event--btn create-btn"
-                    onClick={Create_Event_Fun}
-                  >
-                    Add Event
-                  </button>
+                  <div className="event--edit-btns">
+                    <button
+                      className="event--btn cancel-btn"
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="event--btn create-btn"
+                      onClick={Create_Event_Fun}
+                    >
+                      Add Event
+                    </button>
+                  </div>
                 </Form>
               )}
               {selectedDate && events.length > 0 && (
@@ -313,7 +381,7 @@ const PetCalendar = ({ data }) => {
                         {" "}
                         {events.map((event) => {
                           const eventDate = new Date(event.date);
-                          const selDate = new Date(selectedDate);
+                          const selDate = selectedDate;
                           const involvedAnimals = animalList.filter((animal) =>
                             event.animals.includes(animal.id)
                           );
@@ -367,13 +435,13 @@ const PetCalendar = ({ data }) => {
                                   className="event--btn update-btn"
                                   onClick={() => handleEditEvent(event)}
                                 >
-                                  Update Event{" "}
+                                  <FaEdit />{" "}
                                 </button>{" "}
                                 <button
                                   className="event--btn delete-btn"
                                   onClick={() => Delete_Event_Fun(event.id)}
                                 >
-                                  Delete Event{" "}
+                                  <FaTrash />{" "}
                                 </button>{" "}
                               </div>{" "}
                             </div>

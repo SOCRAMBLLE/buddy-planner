@@ -14,7 +14,6 @@ export const Loader = async () => {
       pets: pets,
       events: events.events,
     };
-    console.log(data);
     return data;
   } catch (error) {
     throw new Error(error);

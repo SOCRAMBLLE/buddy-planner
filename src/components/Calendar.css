@@ -239,18 +239,24 @@
   font-size: 0.9rem;
   color: white;
   font-weight: 500;
-  padding: 8px;
   border: 0;
   border-radius: 10px;
   box-shadow: inset 0px 0px 10px #333;
   background-color: rgb(3, 107, 50);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .event--btn.create-btn {
   margin: 5px 0;
   width: 100px;
   background-color: var(--main-txt-color);
+  background-color: rgb(3, 107, 50);
 }
 .event--btn.cancel-btn {
   background-color: var(--main-txt-color);
