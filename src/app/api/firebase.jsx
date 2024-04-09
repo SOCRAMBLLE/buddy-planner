@@ -16,6 +16,7 @@ import {
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { readAndCompressImage } from "browser-image-resizer";
 import { DeleteUser } from "../auth/auth";
+import { nanoid } from "nanoid";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -132,9 +133,10 @@ export const uploadUserPhoto = async (file) => {
 
 export const uploadPetPhoto = async (file) => {
   try {
+    const newImageName = nanoid() + "-" + file.name;
     const storage = getStorage(firebaseApp);
     const resizePhoto = await readAndCompressImage(file, resizeConfig);
-    const storageRef = ref(storage, "pets/" + file.name);
+    const storageRef = ref(storage, "pets/" + newImageName);
     await uploadBytes(storageRef, resizePhoto);
     const photoURL = await getDownloadURL(storageRef);
     return photoURL;
