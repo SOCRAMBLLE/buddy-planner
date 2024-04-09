@@ -350,19 +350,32 @@ const PetCalendar = ({ data }) => {
                           name="title"
                           value={editEvent.title}
                           onChange={Event_Data_Edit_Update}
-                        />
+                        />{" "}
                         <input
-                          type="time"
-                          name="startTime"
-                          value={editEvent.startTime}
+                          type="text"
+                          placeholder="Location"
+                          name="location"
+                          value={editEvent.location}
                           onChange={Event_Data_Edit_Update}
                         />
-                        <input
-                          type="time"
-                          name="endTime"
-                          value={editEvent.endTime}
-                          onChange={Event_Data_Edit_Update}
-                        />
+                        <label>
+                          Starts
+                          <input
+                            type="time"
+                            name="startTime"
+                            value={editEvent.startTime}
+                            onChange={Event_Data_Edit_Update}
+                          />
+                        </label>
+                        <label>
+                          Ends
+                          <input
+                            type="time"
+                            name="endTime"
+                            value={editEvent.endTime}
+                            onChange={Event_Data_Edit_Update}
+                          />
+                        </label>
                         <label className="buddy-form">
                           Buddy implied
                           <div>
@@ -379,23 +392,20 @@ const PetCalendar = ({ data }) => {
                             ))}
                           </div>
                         </label>
-                        <input
-                          type="text"
-                          placeholder="Location"
-                          name="location"
-                          value={editEvent.location}
-                          onChange={Event_Data_Edit_Update}
-                        />
-                        <select
-                          name="alert"
-                          value={editEvent.alert}
-                          onChange={Event_Data_Edit_Update}
-                        >
-                          <option value="1hour">1 Hour Before</option>
-                          <option value="2hours">2 Hours Before</option>
-                          <option value="1day">1 Day Before</option>
-                          <option value="1week">1 Week Before</option>
-                        </select>
+                        <label>
+                          Alert
+                          <select
+                            name="alert"
+                            value={editEvent.alert}
+                            onChange={Event_Data_Edit_Update}
+                          >
+                            <option value="1hour">No alert</option>
+                            <option value="1hour">1 Hour Before</option>
+                            <option value="2hours">2 Hours Before</option>
+                            <option value="1day">1 Day Before</option>
+                            <option value="1week">1 Week Before</option>
+                          </select>
+                        </label>
                         <textarea
                           placeholder="Notes"
                           name="notes"

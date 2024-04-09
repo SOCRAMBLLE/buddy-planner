@@ -218,6 +218,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 0.3rem;
+  padding: 8px 0 10px;
 }
 
 .event-form label.buddy-form div {
