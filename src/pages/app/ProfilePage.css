@@ -68,6 +68,7 @@
 
 .profile--delete-btn {
   text-decoration: none;
+  width: 150px;
   font-family: "Poppins", sans-serif;
   font-size: 0.9rem;
   color: var(--main-bg-color);
