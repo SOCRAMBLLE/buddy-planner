@@ -1,7 +1,12 @@
 import { createContext, useContext, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { firebaseApp } from "../api/firebase";
-import { getAuth, sendSignInLinkToEmail, signInWithPopup } from "firebase/auth";
+import {
+  deleteUser,
+  getAuth,
+  sendSignInLinkToEmail,
+  signInWithPopup,
+} from "firebase/auth";
 import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
@@ -131,5 +136,17 @@ export async function CreateUser(email) {
       message: errorMessage,
       status: errorCode,
     };
+  }
+}
+
+export async function DeleteUser(user) {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  if (user.id === currentUser.uid) {
+    try {
+      await deleteUser(currentUser);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 }

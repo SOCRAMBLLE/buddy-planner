@@ -3,8 +3,9 @@ import { UseAuth } from "../../app/auth/auth";
 import PageMotion from "../../components/PageMotion";
 import "./ProfilePage.css";
 import PetCard from "../../components/petCard";
-import { queryPets } from "../../app/api/firebase";
+import { deleteUserAccount, queryPets } from "../../app/api/firebase";
 import userIcon from "../../assets/profile/user.png";
+import { useState } from "react";
 // import { getAuth, updateProfile } from "firebase/auth";
 
 export const Loader = async () => {
@@ -23,31 +24,22 @@ const ProfilePage = () => {
   const auth = UseAuth();
   const user = auth.user;
   const navigate = useNavigate();
+  const [deleteUserAlert, setDeleteUserAlert] = useState(false);
   function handleLogout() {
     auth.signout(() => {
       navigate("/auth");
     });
   }
 
-  // const triggerFileInput = () => {
-  //   document.getElementById("fileInput").click();
-  // };
-
-  // const handleChangeProfilePhoto = async (event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
-
-  //   try {
-  //     const authentication = getAuth();
-  //     const getuser = authentication.currentUser;
-  //     console.log(getuser);
-  //     const profilePhotoURL = await uploadUserPhoto(file);
-  //     await updateProfile(getuser, { photoURL: profilePhotoURL });
-  //     navigate("/profile");
-  //   } catch (error) {
-  //     console.error("Erro ao fazer upload da imagem:", error);
-  //   }
-  // };
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUserAccount(user);
+      handleLogout();
+      console.log("delete success");
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
 
   return (
     <PageMotion>
@@ -61,17 +53,11 @@ const ProfilePage = () => {
           className="profile-page--user-img"
           src={user.photoUrl ? user.photoUrl : userIcon}
         />
-        {/* <input
-          id="fileInput"
-          type="file"
-          onChange={handleChangeProfilePhoto}
-          style={{ display: "none" }}
-        /> */}
         <p>
           <strong>email:</strong> {user.email}
         </p>
         <section className="profile-page--pets-container">
-          {pets ? (
+          {pets.length > 0 ? (
             <>
               <h3>Your buddy&apos;s</h3>
               <div className="profile-page--pets">
@@ -89,6 +75,31 @@ const ProfilePage = () => {
             </Link>
           )}
         </section>
+        <button
+          onClick={() => setDeleteUserAlert(true)}
+          className="profile--delete-btn"
+        >
+          Delete Account
+        </button>
+        {deleteUserAlert && (
+          <div className="editpet--delete-alert">
+            <h2>Are you sure?</h2>
+            <div>
+              <button
+                className="editpet--cancel-btn"
+                onClick={() => setDeleteUserAlert(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="editpet--delete-btn"
+                onClick={handleDeleteAccount}
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
+        )}
       </main>
     </PageMotion>
   );

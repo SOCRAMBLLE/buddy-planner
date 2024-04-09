@@ -1,4 +1,4 @@
-import { useLoaderData, redirect } from "react-router-dom";
+import { useLoaderData, redirect, Link } from "react-router-dom";
 import { queryPets } from "../../app/api/firebase";
 import "./Dashboard.css";
 import DashPetCard from "../../components/DashPetCard";
@@ -20,15 +20,25 @@ export const Loader = async () => {
 
 const Dashboard = () => {
   const data = useLoaderData();
+  console.log(data);
 
   return (
     <PageMotion>
       <main className="dashboard--container">
-        <div className="dash--pet-container">
-          {data.map((pet, index) => (
-            <DashPetCard key={index} pet={pet.data} id={pet.id} />
-          ))}
-        </div>
+        {data.length > 0 ? (
+          <div className="dash--pet-container">
+            {data.map((pet, index) => (
+              <DashPetCard key={index} pet={pet.data} id={pet.id} />
+            ))}
+          </div>
+        ) : (
+          <Link
+            to="/profile/register-pet"
+            className="dashboard-page--addpet-btn"
+          >
+            <button>Add your first buddy</button>
+          </Link>
+        )}
       </main>
     </PageMotion>
   );

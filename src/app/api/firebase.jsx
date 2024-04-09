@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { readAndCompressImage } from "browser-image-resizer";
+import { DeleteUser } from "../auth/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -55,6 +56,24 @@ export const createUserDocument = async (user) => {
       console.log("User document created");
     } catch (error) {
       console.error("Error creating user document", error);
+    }
+  }
+};
+
+export const deleteUserAccount = async (user) => {
+  if (!user) return;
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  console.log(user.id);
+  console.log(storedUser.id);
+  const userRef = doc(db, "users", user.id);
+  if (user.id === storedUser.id) {
+    try {
+      const response = await deleteDoc(userRef);
+      const secondResponse = await DeleteUser(user);
+      console.log("deleteUserAccount response", response);
+      console.log("deleteUserAccount secondResponse", secondResponse);
+    } catch (err) {
+      throw new Error(err);
     }
   }
 };
