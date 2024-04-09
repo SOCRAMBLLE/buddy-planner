@@ -4,3 +4,9 @@
   align-items: center;
   margin-bottom: 2rem;
 }
+
+.agenda-page--container .app {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
