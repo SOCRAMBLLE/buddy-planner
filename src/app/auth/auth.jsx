@@ -32,6 +32,10 @@ function useProvideAuth() {
     JSON.parse(localStorage.getItem("user")) || null
   );
 
+  const isAuthenticated = () => {
+    return !!user;
+  };
+
   const signin = (user, cb) => {
     return fakeAuth.signin(() => {
       setCurrentUser(user);
@@ -52,6 +56,7 @@ function useProvideAuth() {
     user,
     signin,
     signout,
+    isAuthenticated,
   };
 }
 

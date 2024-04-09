@@ -29,6 +29,14 @@ const AuthPage = () => {
   const auth = UseAuth();
   const [signUpMessage, setSignUpMessage] = useState(null);
   const [signUpError, setSignUpError] = useState(null);
+  const { isAuthenticated } = UseAuth();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/app");
+    }
+  }, [isAuthenticated, navigate]);
+
   useEffect(() => {
     if (actionData?.success) {
       console.log(actionData.success);
