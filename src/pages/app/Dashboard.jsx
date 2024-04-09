@@ -1,11 +1,15 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, redirect } from "react-router-dom";
 import { queryPets } from "../../app/api/firebase";
 import "./Dashboard.css";
 import DashPetCard from "../../components/DashPetCard";
 import PageMotion from "../../components/PageMotion";
+import { UseAuth } from "../../app/auth/auth";
 
 export const Loader = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) {
+    return redirect("/auth");
+  }
   const userID = user.id;
   try {
     const pets = await queryPets(userID);
@@ -17,7 +21,6 @@ export const Loader = async () => {
 
 const Dashboard = () => {
   const data = useLoaderData();
-  console.log(data);
 
   return (
     <PageMotion>

@@ -69,7 +69,7 @@ const AuthPage = () => {
             <GoogleIcon className="google-icon" />
             <span>Sign up with your Google account</span>
           </button>
-          <hr className="hr-text gradient" data-content="OR" />
+          {/* <hr className="hr-text gradient" data-content="OR" />
           <Form method="post" className="auth-page--email-sign" replace>
             <input
               name="email"
@@ -77,7 +77,7 @@ const AuthPage = () => {
               placeholder="your-email@email.com"
             />
             <button>Sign up</button>
-          </Form>
+          </Form> */}
           {signUpMessage && (
             <pre className="auth-page--signin-message">
               Please check your email and click the link to Login

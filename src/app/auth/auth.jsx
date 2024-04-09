@@ -115,13 +115,13 @@ export async function CreateUser(email) {
   const actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be in the authorized domains list in the Firebase Console.
-    url: "http://localhost:5173/auth/login",
+    url: "http://localhost:5173/app",
     // This must be true.
     handleCodeInApp: true,
   };
   try {
-    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-    localStorage.setItem("emailForSignIn", email);
+    const result = await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    console.log(result);
     return { success: true };
   } catch (err) {
     console.log(err);
