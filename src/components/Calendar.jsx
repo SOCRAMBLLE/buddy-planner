@@ -307,7 +307,7 @@ const PetCalendar = ({ data }) => {
                       value={newEvent.alert}
                       onChange={Event_Data_Update}
                     >
-                      <option value="1hour">No alert</option>
+                      <option value="off">No alert</option>
                       <option value="1hour">1 Hour Before</option>
                       <option value="2hours">2 Hours Before</option>
                       <option value="1day">1 Day Before</option>
@@ -399,7 +399,7 @@ const PetCalendar = ({ data }) => {
                             value={editEvent.alert}
                             onChange={Event_Data_Edit_Update}
                           >
-                            <option value="1hour">No alert</option>
+                            <option value="off">No alert</option>
                             <option value="1hour">1 Hour Before</option>
                             <option value="2hours">2 Hours Before</option>
                             <option value="1day">1 Day Before</option>
