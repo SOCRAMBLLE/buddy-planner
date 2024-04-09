@@ -6,6 +6,7 @@ import { GoogleIcon } from "../components/ui/Icons";
 import { CreateUser, LoginUser, UseAuth } from "../app/auth/auth";
 import { useEffect, useState } from "react";
 import { GoogleAuthProvider } from "firebase/auth";
+import { createUserDocument } from "../app/api/firebase";
 
 export async function Action({ request }) {
   const formData = await request.formData();
@@ -44,6 +45,7 @@ const AuthPage = () => {
       auth.signin(googleLogin, () => {
         localStorage.setItem("user", JSON.stringify(googleLogin));
         navigate("/app");
+        createUserDocument(googleLogin);
       });
       return null;
     } catch (err) {

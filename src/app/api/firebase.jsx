@@ -11,6 +11,7 @@ import {
   doc,
   updateDoc,
   getDoc,
+  setDoc,
 } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { readAndCompressImage } from "browser-image-resizer";
@@ -32,6 +33,31 @@ export const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 export const petsCollectionRef = collection(db, "pets");
 export const usersCollectionRef = collection(db, "users");
+
+export const createUserDocument = async (user) => {
+  if (!user) return;
+
+  const userRef = doc(db, "users", user.id);
+  const snapshot = await getDoc(userRef);
+
+  if (!snapshot.exists()) {
+    const { email, name } = user;
+    const createdAt = new Date();
+    try {
+      await setDoc(userRef, {
+        name: name,
+        email: email,
+        Events: [],
+        Tasks: [],
+        Pets: [],
+        createdAt,
+      });
+      console.log("User document created");
+    } catch (error) {
+      console.error("Error creating user document", error);
+    }
+  }
+};
 
 export const getPets = async () => {
   const snapshot = await getDocs(petsCollectionRef);

@@ -18,6 +18,7 @@ import EditPet, { Loader as petLoader } from "./pages/app/EditPet";
 import Agenda, { Loader as agendaLoader } from "./pages/app/Agenda";
 import Tasks, { Loader as tasksLoader } from "./pages/app/Tasks";
 import { ErrorPage, NotFound } from "./pages/app/error-page";
+import FoodPage from "./pages/app/Food";
 
 function App() {
   const router = createBrowserRouter(
@@ -58,7 +59,7 @@ function App() {
           <Route index element={<Dashboard />} loader={DashLoader} />
           <Route path="agenda" element={<Agenda />} loader={agendaLoader} />
           <Route path="tasks" element={<Tasks />} loader={tasksLoader} />
-          <Route path="food" />
+          <Route path="food" element={<FoodPage />} />
           <Route path="finance" />
           <Route path="settings" />
         </Route>
