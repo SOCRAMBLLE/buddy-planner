@@ -62,9 +62,14 @@ const BuddyRegPage = () => {
 
   async function SubmitForm(event) {
     event.preventDefault();
+    const defaultPetPhotoURL =
+      "https://firebasestorage.googleapis.com/v0/b/paw-planner-86b98.appspot.com/o/pets%2Fpaw.png?alt=media&token=62b25fdc-d86e-4b35-9804-113469e394ca";
+    const completeFormData = {
+      ...formData,
+      imageURL: formData.imageURL || defaultPetPhotoURL,
+    };
     try {
-      console.log(nanoId);
-      await addPet(formData, nanoId);
+      await addPet(completeFormData, nanoId);
       return navigate("/profile");
     } catch (err) {
       return { error: err.message || "Unknown error when trying to login" };

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import PageMotion from "../components/PageMotion";
 import "./AuthPage.css";
-import { Form, useActionData, useNavigate } from "react-router-dom";
+import { useActionData, useNavigate } from "react-router-dom";
 import { GoogleIcon } from "../components/ui/Icons";
 import { CreateUser, LoginUser, UseAuth } from "../app/auth/auth";
 import { useEffect, useState } from "react";

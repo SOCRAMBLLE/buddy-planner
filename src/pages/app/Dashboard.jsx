@@ -3,7 +3,6 @@ import { queryPets } from "../../app/api/firebase";
 import "./Dashboard.css";
 import DashPetCard from "../../components/DashPetCard";
 import PageMotion from "../../components/PageMotion";
-import { UseAuth } from "../../app/auth/auth";
 
 export const Loader = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
