@@ -1,5 +1,5 @@
 .editpet-page--container {
-  position: relative;
+  /* position: relative; */
   display: flex;
   flex-direction: column;
 }
@@ -158,20 +158,20 @@
 
 .editpet--delete-alert {
   position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70%;
-  height: 40%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 3rem;
   background-color: var(--main-bg-color);
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: inset 0px 0px 10px #69a0add8;
+}
+
+.editpet--delete-alert h2 {
+  margin: 0;
 }
 
 .editpet--delete-alert div {
