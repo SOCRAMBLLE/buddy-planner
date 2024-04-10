@@ -3,7 +3,13 @@ import "./AppLayout.css";
 import PageMotion from "../../components/PageMotion";
 import { UseAuth } from "../../app/auth/auth";
 import { MdDashboard } from "react-icons/md";
-import { FaTasks, FaCalendarAlt, FaBone, FaChartBar } from "react-icons/fa";
+import {
+  FaTasks,
+  FaCalendarAlt,
+  FaBone,
+  FaChartBar,
+  FaHeartbeat,
+} from "react-icons/fa";
 
 const AppLayout = () => {
   const auth = UseAuth();
@@ -44,7 +50,7 @@ const AppLayout = () => {
           end
           className={({ isActive }) => (isActive ? "active" : "")}
         >
-          <FaChartBar />
+          <FaHeartbeat />
         </NavLink>
       </nav>
       <Outlet />
