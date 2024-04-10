@@ -150,7 +150,9 @@ export const editPet = async (id, json) => {
     const pet = doc(petsCollectionRef, id);
     await updateDoc(pet, json);
 
-    return { message: "File with the id" + id + " was modified successfully." };
+    return {
+      message: "File with the id " + id + " was modified successfully.",
+    };
   } catch (err) {
     throw new Error(err);
   }
