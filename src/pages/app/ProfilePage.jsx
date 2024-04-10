@@ -84,6 +84,7 @@ const ProfilePage = () => {
         {deleteUserAlert && (
           <div className="editpet--delete-alert">
             <h2>Are you sure?</h2>
+            <pre>All your data will be deleted.</pre>
             <div>
               <button
                 className="editpet--cancel-btn"
