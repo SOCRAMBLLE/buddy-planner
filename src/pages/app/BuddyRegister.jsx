@@ -29,6 +29,7 @@ const BuddyRegPage = () => {
     birthday: "",
     imageURL: "",
     userID: user.id,
+    foodGrams: "",
   });
   const handleTypeSelect = async (pet) => {
     setSelectedType((prev) => ({
