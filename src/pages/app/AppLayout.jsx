@@ -40,7 +40,7 @@ const AppLayout = () => {
           <FaBone />
         </NavLink>
         <NavLink
-          to="finance"
+          to="health"
           end
           className={({ isActive }) => (isActive ? "active" : "")}
         >

@@ -23,6 +23,7 @@ import FoodSearch, { Action as foodForm } from "./pages/app/FoodSearch";
 import PetFoodDetails, {
   Loader as petFoodDetailsLoader,
 } from "./pages/app/PetFoodDetails";
+import UnderDev from "./components/underDev";
 
 function App() {
   const router = createBrowserRouter(
@@ -70,8 +71,7 @@ function App() {
               loader={petFoodDetailsLoader}
             />
           </Route>
-          <Route path="finance" />
-          <Route path="settings" />
+          <Route path="health" element={<UnderDev />} />
           <Route path="foodsearch" element={<FoodSearch />} action={foodForm} />
         </Route>
         <Route path="*" element={<NotFound />} />

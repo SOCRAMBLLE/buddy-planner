@@ -1,0 +1,16 @@
+.under-dev--container {
+  width: 100%;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.under-dev--container h2 {
+  margin: 0;
+}
+
+.under-dev--container img {
+  width: 350px;
+}
