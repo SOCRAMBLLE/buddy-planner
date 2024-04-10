@@ -21,31 +21,34 @@ const DashPetCard = ({ pet, id }) => {
   };
 
   return (
-    <Link
-      className="pet-card--link"
-      to={`/profile/pet?id=${id}&back=${pathname}`}
-    >
-      <div className="dash-pet">
-        <img
-          className="dash-pet--petPhoto"
-          src={pet.imageURL ? pet.imageURL : petImage}
-          alt={pet.name}
-        />
-        <div className="dash-pet--details">
-          <h3>{pet.name}</h3>
-          <p>
-            {pet.breed === "i don't know" ? (
-              ""
-            ) : (
-              <>
-                {pet.breed} <PiDotOutlineFill />
-              </>
-            )}{" "}
-            {petAge(pet.birthday)} years old
-          </p>
+    <div className="dash-pet">
+      <Link
+        className="dash-pet--link"
+        to={`/profile/pet?id=${id}&back=${pathname}`}
+      >
+        <div className="dash-pet--header">
+          <img
+            className="dash-pet--petPhoto"
+            src={pet.imageURL ? pet.imageURL : petImage}
+            alt={pet.name}
+          />
+          <div className="dash-pet--details">
+            <h3>{pet.name}</h3>
+            <p>
+              {pet.breed === "i don't know" ? (
+                ""
+              ) : (
+                <>
+                  {pet.breed} <PiDotOutlineFill />
+                </>
+              )}{" "}
+              {petAge(pet.birthday)} years old
+            </p>
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      <div className="dash-pet--infos">infos</div>
+    </div>
   );
 };
 DashPetCard.propTypes = {

@@ -18,7 +18,11 @@ import EditPet, { Loader as petLoader } from "./pages/app/EditPet";
 import Agenda, { Loader as agendaLoader } from "./pages/app/Agenda";
 import Tasks, { Loader as tasksLoader } from "./pages/app/Tasks";
 import { ErrorPage, NotFound } from "./pages/app/error-page";
-import FoodPage from "./pages/app/Food";
+import FoodPage, { Loader as foodPageLoader } from "./pages/app/Food";
+import FoodSearch, { Action as foodForm } from "./pages/app/FoodSearch";
+import PetFoodDetails, {
+  Loader as petFoodDetailsLoader,
+} from "./pages/app/PetFoodDetails";
 
 function App() {
   const router = createBrowserRouter(
@@ -59,9 +63,16 @@ function App() {
           <Route index element={<Dashboard />} loader={DashLoader} />
           <Route path="agenda" element={<Agenda />} loader={agendaLoader} />
           <Route path="tasks" element={<Tasks />} loader={tasksLoader} />
-          <Route path="food" element={<FoodPage />} />
+          <Route path="food" element={<FoodPage />} loader={foodPageLoader}>
+            <Route
+              path=":id"
+              element={<PetFoodDetails />}
+              loader={petFoodDetailsLoader}
+            />
+          </Route>
           <Route path="finance" />
           <Route path="settings" />
+          <Route path="foodsearch" element={<FoodSearch />} action={foodForm} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
