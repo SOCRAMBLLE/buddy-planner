@@ -46,4 +46,23 @@
 }
 
 .dash-pet--infos {
+  width: 100%;
+  padding-left: 1rem;
+}
+
+.dash-pet--infos a {
+  width: 100%;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dash-pet--infos a img {
+  height: 45px;
+}
+
+.dash-pet--infos a p {
+  font-size: 0.8rem;
+  color: var(--main-txt-color);
 }
