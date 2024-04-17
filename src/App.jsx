@@ -24,6 +24,9 @@ import PetFoodDetails, {
   Loader as petFoodDetailsLoader,
 } from "./pages/app/PetFoodDetails";
 import UnderDev from "./components/underDev";
+import PetFoodHistory, {
+  Loader as petFoodHistoryLoader,
+} from "./pages/app/PetFoodHistory";
 
 function App() {
   const router = createBrowserRouter(
@@ -64,11 +67,16 @@ function App() {
           <Route index element={<Dashboard />} loader={DashLoader} />
           <Route path="agenda" element={<Agenda />} loader={agendaLoader} />
           <Route path="tasks" element={<Tasks />} loader={tasksLoader} />
-          <Route path="food" element={<UnderDev />} loader={foodPageLoader}>
+          <Route path="food" element={<FoodPage />} loader={foodPageLoader}>
             <Route
-              path=":id"
+              path=":petid"
               element={<PetFoodDetails />}
               loader={petFoodDetailsLoader}
+            />
+            <Route
+              path=":petid/history"
+              element={<PetFoodHistory />}
+              loader={petFoodHistoryLoader}
             />
           </Route>
           <Route path="health" element={<UnderDev />} />

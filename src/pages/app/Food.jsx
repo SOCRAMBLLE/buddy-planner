@@ -27,7 +27,7 @@ const FoodPage = () => {
         {petData.map((pet, index) => (
           <NavLink
             to={pet.id}
-            end
+            // end
             className={({ isActive }) => (isActive ? "active" : "")}
             key={index}
           >
