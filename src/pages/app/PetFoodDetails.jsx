@@ -90,7 +90,7 @@ const PetFoodDetails = () => {
               value={foodEntry}
               name="foodGrams"
               onChange={handleDailyChange}
-              size="1"
+              size="3"
             />
             g
           </label>

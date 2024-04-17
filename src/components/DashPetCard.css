@@ -46,8 +46,7 @@
 }
 
 .dash-pet--infos {
-  width: 100%;
-  padding-left: 1rem;
+  margin: 0 1rem;
 }
 
 .dash-pet--infos a {
