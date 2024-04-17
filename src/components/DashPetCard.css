@@ -41,6 +41,7 @@
   text-transform: capitalize;
   margin: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   font-size: 0.85rem;
 }
