@@ -129,7 +129,6 @@ const PetFoodDetails = () => {
       date: entryDate.toISOString(),
       grams: foodEntry,
     };
-    console.log(newEntry);
     const updatedData = {
       ...petData.data,
       foodIntake: [...(pet.data.foodIntake || []), newEntry],
@@ -137,7 +136,6 @@ const PetFoodDetails = () => {
     try {
       const response = await editPet(petData.id, updatedData);
       setAddFoodEntry(false);
-      console.log(response);
       return response;
     } catch (err) {
       console.error(err);
