@@ -222,7 +222,7 @@ const PetFoodDetails = () => {
                       name="foodGrams"
                       onChange={handleGramsChange}
                       onInput="this.parentNode.dataset.value = this.value"
-                      size="1"
+                      size="3"
                     />
                     g
                   </label>
@@ -282,7 +282,7 @@ const PetFoodDetails = () => {
                     name="foodGrams"
                     onChange={handleGramsChange}
                     onInput="this.parentNode.dataset.value = this.value"
-                    size="1"
+                    size="3"
                   />
                   g
                 </label>
