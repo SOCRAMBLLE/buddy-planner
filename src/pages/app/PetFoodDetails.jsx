@@ -1,4 +1,4 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData, useNavigate } from "react-router-dom";
 import PageMotion from "../../components/PageMotion";
 import "./PetFoodDetails.css";
 import DatePicker from "react-datepicker";
@@ -12,7 +12,7 @@ import buddyBowlFull from "../../assets/misc/buddy-bowl-full.png";
 import buddyBowlHalf from "../../assets/misc/buddy-bowl-half.png";
 
 export const Loader = async ({ params }) => {
-  const petId = params.id;
+  const petId = params.petid;
   try {
     const petData = await getPet(petId);
     return petData;
@@ -23,6 +23,7 @@ export const Loader = async ({ params }) => {
 };
 
 const PetFoodDetails = () => {
+  const navigate = useNavigate();
   const pet = useLoaderData();
   const [petData, setPetData] = useState(pet || null);
   const [foodQnty, setFoodQnty] = useState(pet.data.foodGrams || 0);
@@ -30,7 +31,7 @@ const PetFoodDetails = () => {
   const [addFoodEntry, setAddFoodEntry] = useState(false);
   const [foodEntry, setFoodEntry] = useState(pet.data.foodGrams || 0);
   const [entryDate, setEntryDate] = useState(new Date());
-  console.log(foodEntry);
+
   useEffect(() => {
     setPetData(pet || null);
   }, [pet]);
@@ -89,7 +90,6 @@ const PetFoodDetails = () => {
               value={foodEntry}
               name="foodGrams"
               onChange={handleDailyChange}
-              onInput="this.parentNode.dataset.value = this.value"
               size="1"
             />
             g
@@ -108,7 +108,10 @@ const PetFoodDetails = () => {
           >
             <GrRevert />
           </button>
-          <button className="food-page-button" onClick={handleDailyEntry}>
+          <button
+            className="food-page-button"
+            onClick={() => handleDailyEntry()}
+          >
             <FaSave />
           </button>
         </div>
@@ -116,11 +119,56 @@ const PetFoodDetails = () => {
     );
   }
 
-  const handleDailyEntry = async () => {};
   const handleDailyChange = (event) => {
     const value = Math.max(0, parseInt(event.target.value, 10) || 0);
     setFoodEntry(value);
   };
+
+  const handleDailyEntry = async () => {
+    const newEntry = {
+      date: entryDate.toISOString(),
+      grams: foodEntry,
+    };
+    console.log(newEntry);
+    const updatedData = {
+      ...petData.data,
+      foodIntake: [...(pet.data.foodIntake || []), newEntry],
+    };
+    try {
+      const response = await editPet(petData.id, updatedData);
+      setAddFoodEntry(false);
+      console.log(response);
+      return response;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err);
+    }
+  };
+
+  const getTodaysFoodIntake = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const todaysEntries = petData.data.foodIntake.filter(
+      (entry) => entry.date.slice(0, 10) === today
+    );
+    return todaysEntries.reduce((total, entry) => total + entry.grams, 0);
+  };
+
+  const todaysIntake = getTodaysFoodIntake();
+  const dailyGoal = petData.data.foodGrams;
+
+  let bowlImage;
+  let statusMessage;
+
+  if (todaysIntake === 0) {
+    bowlImage = buddyBowlEmpty;
+    statusMessage = "No food recorded yet for today.";
+  } else if (todaysIntake < dailyGoal) {
+    bowlImage = buddyBowlHalf;
+    statusMessage = `${petData.data.name} has eaten ${todaysIntake}g of ${dailyGoal}g today.`;
+  } else {
+    bowlImage = buddyBowlFull;
+    statusMessage = `${petData.data.name} already have eaten the daily dose today ✅`;
+  }
 
   return (
     <PageMotion>
@@ -131,26 +179,24 @@ const PetFoodDetails = () => {
               {addFoodEntry ? (
                 foodEntryModal()
               ) : (
-                <>
+                <div className="food--actions">
                   <button
-                    className="food-page-button add-food-entry-btn {"
+                    className="food-page-button add-food-entry-btn"
                     onClick={() => setAddFoodEntry(true)}
                   >
                     Add Food Entry
                   </button>
-                </>
+                  <button
+                    className="food-page-button food-history-btn"
+                    onClick={() => navigate("history")}
+                  >
+                    Food history
+                  </button>
+                </div>
               )}
-              <span>
-                <img src={buddyBowlEmpty} />
-              </span>
-              <span>
-                <img src={buddyBowlHalf} />
-              </span>
-              <span>
-                <img src={buddyBowlFull} />
-                <pre>
-                  {petData.data.name} already have eaten the daily dose today ✅
-                </pre>
+              <span className="food-details--daily-info">
+                <img src={bowlImage} />
+                <p>{statusMessage}</p>
               </span>
             </div>
 
