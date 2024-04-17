@@ -64,7 +64,7 @@ function App() {
           <Route index element={<Dashboard />} loader={DashLoader} />
           <Route path="agenda" element={<Agenda />} loader={agendaLoader} />
           <Route path="tasks" element={<Tasks />} loader={tasksLoader} />
-          <Route path="food" element={<FoodPage />} loader={foodPageLoader}>
+          <Route path="food" element={<UnderDev />} loader={foodPageLoader}>
             <Route
               path=":id"
               element={<PetFoodDetails />}

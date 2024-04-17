@@ -15,6 +15,16 @@
   align-items: center;
   padding: 1rem;
 }
+
+.pet-food--form label {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.pet-food--form .react-datepicker-wrapper {
+  text-align: center;
+}
+
 .pet-foodGramsSet {
   display: flex;
   align-items: center;

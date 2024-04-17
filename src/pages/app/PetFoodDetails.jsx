@@ -1,6 +1,8 @@
 import { Form, useLoaderData } from "react-router-dom";
 import PageMotion from "../../components/PageMotion";
 import "./PetFoodDetails.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { editPet, getPet } from "../../app/api/firebase";
 import { useEffect, useState } from "react";
 import { GrRevert } from "react-icons/gr";
@@ -27,6 +29,8 @@ const PetFoodDetails = () => {
   const [editQnty, setEditQnty] = useState(false);
   const [addFoodEntry, setAddFoodEntry] = useState(false);
   const [foodEntry, setFoodEntry] = useState(pet.data.foodGrams || 0);
+  const [entryDate, setEntryDate] = useState(new Date());
+  console.log(foodEntry);
   useEffect(() => {
     setPetData(pet || null);
   }, [pet]);
@@ -68,6 +72,10 @@ const PetFoodDetails = () => {
           How many grams of food <strong>{petData.data.name}</strong> have
           eaten?
         </label>
+        <DatePicker
+          selected={entryDate}
+          onChange={(date) => setEntryDate(date)}
+        />
         <div className="pet-foodGramsSet">
           <button
             className="food-page-button"
