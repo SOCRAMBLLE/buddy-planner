@@ -62,6 +62,6 @@ Distributed under the MIT License. See LICENSE for more information.
 
 ### Contact
 
-Your Name - marcos@marcosfraga.ch
+Marcos Fraga - marcos@marcosfraga.ch
 
 Project Link: https://github.com/SOCRAMBLLE/paw-planner
